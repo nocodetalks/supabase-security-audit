@@ -1,0 +1,498 @@
+/* Vercel Design System - Light Mode Only */
+
+/* Base */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Report Cards */
+.report-card {
+    padding: 24px;
+    border-radius: 5px;
+    border: 1px solid #eaeaea;
+    background-color: #fff;
+}
+
+/* Sidebar */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    transition: color 150ms, background-color 150ms;
+}
+
+.sidebar-link:hover {
+    color: #000;
+    background-color: #fafafa;
+}
+
+.sidebar-link.active {
+    color: #000;
+    background-color: #fafafa;
+}
+
+.sidebar-count {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background-color: #eaeaea;
+    color: #666;
+}
+
+/* Stat Cards */
+.stat-card {
+    padding: 16px;
+    border-radius: 5px;
+    border: 1px solid #eaeaea;
+    background-color: #fafafa;
+    text-align: center;
+}
+
+.stat-card .stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    line-height: 1.2;
+}
+
+.stat-card .stat-label {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* Score Badge */
+.score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.score-badge.score-critical {
+    background-color: #fef2f2;
+    color: #e00;
+    border: 1px solid #fecaca;
+}
+
+.score-badge.score-high {
+    background-color: #fff7ed;
+    color: #f5a623;
+    border: 1px solid #fed7aa;
+}
+
+.score-badge.score-medium {
+    background-color: #fffbeb;
+    color: #f5a623;
+    border: 1px solid #fde68a;
+}
+
+.score-badge.score-low {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+/* Severity Badges */
+.badge-severity {
+    display: inline-flex;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 20px;
+}
+
+.badge-critical {
+    background-color: #fef2f2;
+    color: #e00;
+}
+
+.badge-high {
+    background-color: #fff7ed;
+    color: #f5a623;
+}
+
+.badge-medium {
+    background-color: #fffbeb;
+    color: #f5a623;
+}
+
+.badge-low {
+    background-color: #eff6ff;
+    color: #0070f3;
+}
+
+.badge-success {
+    background-color: #f0fdf4;
+    color: #16a34a;
+}
+
+.badge-info {
+    background-color: #fafafa;
+    color: #666;
+}
+
+/* Method Badges */
+.method-badge {
+    display: inline-flex;
+    padding: 2px 5px;
+    font-size: 10px;
+    font-family: 'Geist Mono', monospace;
+    font-weight: 500;
+    border-radius: 3px;
+}
+
+.method-get {
+    background-color: #f0fdf4;
+    color: #16a34a;
+}
+
+.method-post {
+    background-color: #eff6ff;
+    color: #0070f3;
+}
+
+.method-patch {
+    background-color: #fffbeb;
+    color: #f5a623;
+}
+
+.method-delete {
+    background-color: #fef2f2;
+    color: #e00;
+}
+
+.method-unknown {
+    background-color: #fafafa;
+    color: #666;
+}
+
+/* Issue Cards */
+.issue-card {
+    padding: 12px 16px;
+    border-radius: 5px;
+    border-left: 2px solid;
+    transition: background-color 150ms;
+}
+
+.issue-critical {
+    background-color: #fef2f2;
+    border-color: #e00;
+}
+
+.issue-critical:hover {
+    background-color: #fee2e2;
+}
+
+.issue-high {
+    background-color: #fff7ed;
+    border-color: #f5a623;
+}
+
+.issue-high:hover {
+    background-color: #ffedd5;
+}
+
+.issue-medium {
+    background-color: #fffbeb;
+    border-color: #f5a623;
+}
+
+.issue-medium:hover {
+    background-color: #fef3c7;
+}
+
+.issue-low {
+    background-color: #eff6ff;
+    border-color: #0070f3;
+}
+
+.issue-low:hover {
+    background-color: #dbeafe;
+}
+
+/* Accordion */
+.accordion-item {
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: border-color 150ms;
+}
+
+.accordion-item:hover {
+    border-color: #666;
+}
+
+.accordion-trigger {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    transition: background-color 150ms;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+}
+
+.accordion-trigger:hover {
+    background-color: #f5f5f5;
+}
+
+.accordion-trigger.open {
+    background-color: #f5f5f5;
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 300ms ease-out, opacity 200ms ease-out;
+}
+
+.accordion-content.open {
+    max-height: 2000px;
+    opacity: 1;
+}
+
+.accordion-trigger svg.chevron {
+    transition: transform 200ms;
+    color: #666;
+}
+
+.accordion-trigger.open svg.chevron {
+    transform: rotate(180deg);
+}
+
+/* Filter Buttons */
+.filter-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    background-color: white;
+    border: 1px solid #eaeaea;
+    transition: all 150ms;
+}
+
+.filter-btn:hover {
+    border-color: #000;
+    color: #000;
+}
+
+.filter-btn.active {
+    background-color: #000;
+    border-color: #000;
+    color: white;
+}
+
+.filter-btn:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.filter-btn:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 10px 16px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transform: translateY(0);
+    opacity: 1;
+    transition: all 200ms;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast-success {
+    background-color: #000;
+    color: white;
+}
+
+.toast-error {
+    background-color: #e00;
+    color: white;
+}
+
+.toast.hidden {
+    opacity: 0;
+    transform: translateY(16px);
+    pointer-events: none;
+}
+
+/* Score Circle */
+.score-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.score-circle.score-critical {
+    background-color: #fef2f2;
+    border: 2px solid #fecaca;
+    color: #e00;
+}
+
+.score-circle.score-high {
+    background-color: #fff7ed;
+    border: 2px solid #fed7aa;
+    color: #f5a623;
+}
+
+.score-circle.score-medium {
+    background-color: #fffbeb;
+    border: 2px solid #fde68a;
+    color: #f5a623;
+}
+
+.score-circle.score-low {
+    background-color: #f0fdf4;
+    border: 2px solid #bbf7d0;
+    color: #16a34a;
+}
+
+/* Code Block */
+.code-block {
+    position: relative;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 6px;
+    border-radius: 5px;
+    background-color: #333;
+    color: #888;
+    opacity: 0;
+    transition: all 150ms;
+}
+
+.code-block:hover .copy-btn {
+    opacity: 1;
+}
+
+.copy-btn:hover {
+    background-color: #444;
+    color: #fff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #fafafa;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #eaeaea;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* Animations */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 150ms ease-out forwards;
+}
+
+.animate-count {
+    animation: fade-in 200ms ease-out forwards;
+}
+
+.stagger-item {
+    opacity: 0;
+    animation: fade-in 150ms ease-out forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 30ms; }
+.stagger-item:nth-child(2) { animation-delay: 60ms; }
+.stagger-item:nth-child(3) { animation-delay: 90ms; }
+.stagger-item:nth-child(4) { animation-delay: 120ms; }
+.stagger-item:nth-child(5) { animation-delay: 150ms; }
+
+/* Focus States */
+input:focus {
+    outline: none;
+    border-color: #000;
+}
+
+button:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+}
+
+/* Table Row Hover */
+.table-row:hover {
+    background-color: #fafafa;
+}
+
+/* Mode Toggle */
+.mode-toggle {
+    color: #666;
+    background-color: transparent;
+}
+
+.mode-toggle.active {
+    color: #000;
+    background-color: white;
+}
+
+.mode-toggle:hover:not(.active) {
+    color: #000;
+}
+
+/* Print */
+@media print {
+    #report-sidebar,
+    #results-header,
+    .filter-btn,
+    #table-search,
+    #function-search {
+        display: none !important;
+    }
+
+    .report-card {
+        break-inside: avoid;
+    }
+}

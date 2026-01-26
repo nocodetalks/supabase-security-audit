@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolicyCheck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'geist': {
+                            '0': '#000000',
+                            '100': '#111111',
+                            '200': '#333333',
+                            '300': '#444444',
+                            '400': '#666666',
+                            '500': '#888888',
+                            '600': '#999999',
+                            '700': '#eaeaea',
+                            '800': '#fafafa',
+                            '900': '#ffffff',
+                        },
+                        'accents': {
+                            '1': '#fafafa',
+                            '2': '#eaeaea',
+                            '3': '#999999',
+                            '4': '#888888',
+                            '5': '#666666',
+                            '6': '#444444',
+                            '7': '#333333',
+                            '8': '#111111',
+                        },
+                        'error': '#e00',
+                        'success': '#0070f3',
+                        'warning': '#f5a623',
+                    },
+                    fontFamily: {
+                        'sans': ['Geist', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        'mono': ['Geist Mono', 'Menlo', 'Monaco', 'monospace'],
+                    },
+                    fontSize: {
+                        '13': '13px',
+                        '14': '14px',
+                    },
+                    borderRadius: {
+                        'vercel': '5px',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="font-sans bg-white text-geist-0 antialiased">
+    <!-- Navigation -->
+    <nav class="border-b border-accents-2 bg-white sticky top-0 z-50">
+        <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <img src="logo.png" alt="PolicyCheck" class="h-8 w-auto">
+            </div>
+            <div class="flex items-center gap-8 text-14 text-geist-400">
+                <a href="#features" class="hover:text-geist-0 transition-colors">Features</a>
+                <a href="#how-it-works" class="hover:text-geist-0 transition-colors">How it works</a>
+                <div class="relative group" id="contact-dropdown">
+                    <button id="contact-button" type="button" class="hover:text-geist-0 transition-colors flex items-center gap-1">
+                        Contact
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                        </svg>
+                    </button>
+                    <div id="contact-menu" class="absolute right-0 top-full mt-2 w-48 bg-white border border-accents-2 rounded-vercel shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <a href="https://x.com/NocodeTalks" target="_blank" rel="noopener noreferrer" class="block px-4 py-2.5 text-14 text-geist-400 hover:bg-accents-1 hover:text-geist-0 transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                            Twitter
+                        </a>
+                        <a href="mailto:nocodetalks@gmail.com" class="block px-4 py-2.5 text-14 text-geist-400 hover:bg-accents-1 hover:text-geist-0 transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                            </svg>
+                            Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero-section" class="py-20 md:py-28">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accents-2 text-13 text-geist-400 mb-6">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    Free & Open Source
+                </div>
+                <h1 class="text-5xl md:text-6xl font-semibold text-geist-0 mb-4 tracking-[-0.04em] leading-[1.1]">
+                    PolicyCheck
+                </h1>
+                <p class="text-xl text-geist-400 max-w-xl mx-auto leading-relaxed">
+                    Analyze your Supabase project's public API exposure. See what attackers can see with just your anon key.
+                </p>
+            </div>
+
+            <!-- Input Form -->
+            <div class="max-w-md mx-auto">
+                <form id="audit-form">
+                    <!-- Manual Entry Mode -->
+                    <div id="manual-mode" class="p-6 rounded-vercel border border-accents-2 bg-white space-y-4">
+                        <div>
+                            <label for="project-url" class="block text-14 text-geist-0 mb-2">
+                                Project URL
+                            </label>
+                            <input
+                                type="url"
+                                id="project-url"
+                                placeholder="https://your-project.supabase.co"
+                                class="w-full h-10 px-3 rounded-vercel border border-accents-2 bg-white text-14 text-geist-0 placeholder:text-geist-500 focus:outline-none focus:border-geist-0 focus:ring-1 focus:ring-geist-0 transition-colors"
+                            >
+                            <p class="text-xs text-geist-500 mt-1.5" style="font-size: 12px;">
+                                Find it in: <span class="font-medium">Project → Project Settings → Data API</span>
+                            </p>
+                        </div>
+
+                        <div>
+                            <label for="anon-key" class="block text-14 text-geist-0 mb-2">
+                                Anon Key
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="password"
+                                    id="anon-key"
+                                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                    class="w-full h-10 px-3 pr-10 rounded-vercel border border-accents-2 bg-white text-14 text-geist-0 placeholder:text-geist-500 focus:outline-none focus:border-geist-0 focus:ring-1 focus:ring-geist-0 transition-colors font-mono"
+                                >
+                                <button
+                                    type="button"
+                                    id="toggle-key"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-geist-500 hover:text-geist-0 transition-colors"
+                                >
+                                    <svg id="eye-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <svg id="eye-off-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p class="text-xs text-geist-500 mt-1.5" style="font-size: 12px;">
+                                Find it in: <span class="font-medium">Project → Project Settings → API KEY</span>
+                            </p>
+                            <p class="text-xs text-geist-500 mt-1" style="font-size: 12px;">
+                                <span class="font-medium">Note:</span> The anon key is a public key and safe to share.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        id="analyze-btn"
+                        class="w-full h-10 rounded-vercel bg-geist-0 text-white text-14 font-medium hover:bg-geist-200 transition-colors flex items-center justify-center gap-2 mt-4"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        <span id="analyze-btn-text">Analyze Security</span>
+                    </button>
+                </form>
+
+                <p class="text-center text-13 text-geist-500 mt-4">
+                    100% client-side. Your keys never leave your browser.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 border-t border-accents-2">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <h2 class="text-3xl font-semibold text-geist-0 text-center mb-4 tracking-[-0.02em]">What we check</h2>
+            <p class="text-geist-400 text-center mb-12">Comprehensive security analysis in seconds</p>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="p-6 rounded-vercel border border-accents-2 hover:border-geist-400 transition-colors">
+                    <div class="w-10 h-10 rounded-vercel bg-accents-1 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-geist-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-geist-0 mb-2">Exposed Tables</h3>
+                    <p class="text-14 text-geist-400 leading-relaxed">Discover all tables and views accessible with your anon key, including column details and row counts.</p>
+                </div>
+                
+                <div class="p-6 rounded-vercel border border-accents-2 hover:border-geist-400 transition-colors">
+                    <div class="w-10 h-10 rounded-vercel bg-accents-1 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-geist-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-geist-0 mb-2">Exposed RPC Functions</h3>
+                    <p class="text-14 text-geist-400 leading-relaxed">List all exposed RPC functions with their parameters and identify potentially sensitive operations.</p>
+                </div>
+                
+                <div class="p-6 rounded-vercel border border-accents-2 hover:border-geist-400 transition-colors">
+                    <div class="w-10 h-10 rounded-vercel bg-accents-1 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-geist-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-geist-0 mb-2">Security Issues</h3>
+                    <p class="text-14 text-geist-400 leading-relaxed">Detect sensitive columns, unrestricted write operations, and calculate an overall risk score.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works Section -->
+    <section id="how-it-works" class="py-20 border-t border-accents-2">
+        <div class="max-w-[600px] mx-auto px-6">
+            <h2 class="text-3xl font-semibold text-geist-0 text-center mb-4 tracking-[-0.02em]">How it works</h2>
+            <p class="text-geist-400 text-center mb-12">Three simple steps to better security</p>
+            
+            <div class="space-y-8">
+                <div class="flex gap-4 items-start">
+                    <div class="w-8 h-8 rounded-full border border-accents-2 text-geist-400 flex items-center justify-center flex-shrink-0 text-14 font-medium">1</div>
+                    <div>
+                        <h3 class="font-medium text-geist-0 mb-1">Enter your credentials</h3>
+                        <p class="text-14 text-geist-400">Provide your Supabase project URL and anon key. These are public credentials that are safe to share.</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-start">
+                    <div class="w-8 h-8 rounded-full border border-accents-2 text-geist-400 flex items-center justify-center flex-shrink-0 text-14 font-medium">2</div>
+                    <div>
+                        <h3 class="font-medium text-geist-0 mb-1">We fetch the OpenAPI spec</h3>
+                        <p class="text-14 text-geist-400">Using read-only GET and OPTIONS requests, we discover what's exposed through your PostgREST API.</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-start">
+                    <div class="w-8 h-8 rounded-full border border-accents-2 text-geist-400 flex items-center justify-center flex-shrink-0 text-14 font-medium">3</div>
+                    <div>
+                        <h3 class="font-medium text-geist-0 mb-1">Get your security report</h3>
+                        <p class="text-14 text-geist-400">Review identified issues, export as JSON or PDF, and take action to improve your security posture.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading State -->
+    <section id="loading-section" class="hidden py-24">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="flex flex-col items-center justify-center">
+                <div class="w-8 h-8 rounded-full border-2 border-accents-2 border-t-geist-0 animate-spin mb-6"></div>
+                <p class="text-geist-400 text-14" id="loading-message">Fetching API specification...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Error State -->
+    <section id="error-section" class="hidden py-20">
+        <div class="max-w-md mx-auto px-6">
+            <div class="p-6 rounded-vercel border border-error/20 bg-error/5 text-center">
+                <div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-5 h-5 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-geist-0 mb-2">Analysis Failed</h3>
+                <p class="text-14 text-geist-400 mb-6" id="error-message">An error occurred</p>
+                <button
+                    id="retry-btn"
+                    class="h-10 px-4 rounded-vercel bg-geist-0 text-white text-14 font-medium hover:bg-geist-200 transition-colors"
+                >
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results-section" class="hidden">
+        <!-- Sticky Header -->
+        <div id="results-header" class="sticky top-16 z-40 bg-white border-b border-accents-2">
+            <div class="max-w-[1200px] mx-auto px-6 h-14 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div id="header-score" class="score-badge"></div>
+                    <div id="header-stats" class="flex items-center gap-4 text-13 text-geist-400"></div>
+                </div>
+                <div class="flex gap-2">
+                    <button
+                        id="copy-json-btn"
+                        class="h-8 px-3 rounded-vercel border border-accents-2 text-geist-400 text-13 font-medium hover:border-geist-400 hover:text-geist-0 transition-colors flex items-center gap-1.5"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Copy
+                    </button>
+                    <button
+                        id="download-btn"
+                        class="h-8 px-3 rounded-vercel border border-accents-2 text-geist-400 text-13 font-medium hover:border-geist-400 hover:text-geist-0 transition-colors flex items-center gap-1.5"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        JSON
+                    </button>
+                    <button
+                        id="download-pdf-btn"
+                        class="h-8 px-3 rounded-vercel border border-accents-2 text-geist-400 text-13 font-medium hover:border-geist-400 hover:text-geist-0 transition-colors flex items-center gap-1.5"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                        PDF
+                    </button>
+                    <button
+                        id="new-scan-btn"
+                        class="h-8 px-4 rounded-vercel bg-geist-0 text-white text-13 font-medium hover:bg-geist-200 transition-colors flex items-center gap-1.5"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        New Scan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-[1200px] mx-auto px-6 py-8">
+            <div class="flex gap-8">
+                <!-- Sidebar -->
+                <aside id="report-sidebar" class="hidden lg:block w-48 flex-shrink-0">
+                    <nav class="sticky top-[140px] space-y-0.5">
+                        <a href="#section-overview" class="sidebar-link active">Overview</a>
+                        <a href="#section-issues" class="sidebar-link">
+                            Issues
+                            <span id="sidebar-issues-count" class="sidebar-count">0</span>
+                        </a>
+                        <a href="#section-tables" class="sidebar-link">
+                            Tables
+                            <span id="sidebar-tables-count" class="sidebar-count">0</span>
+                        </a>
+                        <a href="#section-functions" class="sidebar-link">
+                            Functions
+                            <span id="sidebar-functions-count" class="sidebar-count">0</span>
+                        </a>
+                        <a href="#section-remediation" class="sidebar-link">Remediation</a>
+                        <a href="#section-details" class="sidebar-link">Details</a>
+                        <a href="#section-checklist" class="sidebar-link">Security Checklist</a>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="flex-1 min-w-0 space-y-6">
+                    <!-- Overview -->
+                    <section id="section-overview" class="scroll-mt-36">
+                        <div class="report-card">
+                            <h2 class="text-lg font-medium text-geist-0 mb-6">Overview</h2>
+                            <div id="summary-content" class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8"></div>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                                    <h3 class="text-13 font-medium text-geist-400 mb-4">Risk Score</h3>
+                                    <div class="flex items-center gap-6">
+                                        <div class="w-24 h-24">
+                                            <canvas id="risk-chart"></canvas>
+                                        </div>
+                                        <div id="score-content" class="flex-1"></div>
+                                    </div>
+                                </div>
+                                <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                                    <h3 class="text-13 font-medium text-geist-400 mb-4">Issues by Severity</h3>
+                                    <div class="h-24">
+                                        <canvas id="issues-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Issues -->
+                    <section id="section-issues" class="scroll-mt-36">
+                        <div class="report-card">
+                            <h2 class="text-lg font-medium text-geist-0 mb-6">Security Issues</h2>
+                            <div id="issues-content" class="space-y-2"></div>
+                        </div>
+                    </section>
+
+                    <!-- Tables -->
+                    <section id="section-tables" class="scroll-mt-36">
+                        <div class="report-card">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-lg font-medium text-geist-0">Exposed Tables & Views</h2>
+                                <div class="relative">
+                                    <input
+                                        type="text"
+                                        id="table-search"
+                                        placeholder="Search..."
+                                        class="h-8 pl-8 pr-3 text-13 rounded-vercel border border-accents-2 bg-white focus:outline-none focus:border-geist-0 transition-colors w-40"
+                                    >
+                                    <svg class="w-3.5 h-3.5 text-geist-500 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div id="tables-content"></div>
+                        </div>
+                    </section>
+
+                    <!-- Functions -->
+                    <section id="section-functions" class="scroll-mt-36">
+                        <div class="report-card">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-lg font-medium text-geist-0">Exposed RPC Functions</h2>
+                                <div class="relative">
+                                    <input
+                                        type="text"
+                                        id="function-search"
+                                        placeholder="Search..."
+                                        class="h-8 pl-8 pr-3 text-13 rounded-vercel border border-accents-2 bg-white focus:outline-none focus:border-geist-0 transition-colors w-40"
+                                    >
+                                    <svg class="w-3.5 h-3.5 text-geist-500 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div id="functions-content"></div>
+                        </div>
+                    </section>
+
+                    <!-- Remediation -->
+                    <section id="section-remediation" class="scroll-mt-36">
+                        <div class="report-card">
+                            <h2 class="text-lg font-medium text-geist-0 mb-1">Remediation Guide</h2>
+                            <p class="text-13 text-geist-400 mb-6">Copy-paste SQL snippets to fix identified issues</p>
+                            <div id="remediation-content" class="space-y-3"></div>
+                        </div>
+                    </section>
+
+                    <!-- Technical Details -->
+                    <section id="section-details" class="scroll-mt-36">
+                        <div class="report-card">
+                            <button id="details-toggle" class="w-full flex items-center justify-between text-left">
+                                <h2 class="text-lg font-medium text-geist-0">Technical Details</h2>
+                                <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div id="details-content" class="hidden mt-6 space-y-4">
+                                <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                                    <h3 class="text-13 font-medium text-geist-400 mb-4">JWT Token Analysis</h3>
+                                    <div id="jwt-content"></div>
+                                </div>
+                                <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                                    <h3 class="text-13 font-medium text-geist-400 mb-4">Storage Buckets</h3>
+                                    <div id="buckets-content" class="space-y-2"></div>
+                                </div>
+                                <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                                    <h3 class="text-13 font-medium text-geist-400 mb-4">Data Exposure Summary</h3>
+                                    <div id="exposure-content"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Checklist -->
+                    <section id="section-checklist" class="scroll-mt-36">
+                        <div class="report-card">
+                            <h2 class="text-lg font-medium text-geist-0 mb-6">Security Checklist</h2>
+                            <div id="checklist-content" class="space-y-2"></div>
+                        </div>
+                    </section>
+
+                    <!-- Limitations -->
+                    <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                        <h3 class="text-13 font-medium text-geist-0 mb-3">Limitations</h3>
+                        <ul class="text-13 text-geist-400 space-y-1.5">
+                            <li>• Edge functions require Management API and cannot be discovered with anon key</li>
+                            <li>• RLS policy details may not be accessible with anon key</li>
+                            <li>• Cannot detect server-side security measures or custom middleware</li>
+                            <li>• Write permissions detected via OPTIONS headers may not be accurate</li>
+                        </ul>
+                    </div>
+
+                    <!-- Safety Note -->
+                    <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                        <div class="flex items-center gap-2 text-geist-0 text-14 font-medium mb-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                            Safe & Read-Only
+                        </div>
+                        <p class="text-13 text-geist-400">
+                            This tool uses only safe, read-only methods (GET and OPTIONS requests). It will never modify your database.
+                        </p>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div id="data-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-geist-0/50" id="modal-backdrop"></div>
+        <div class="absolute inset-4 md:inset-10 bg-white rounded-vercel flex flex-col overflow-hidden border border-accents-2">
+            <div class="flex items-center justify-between px-4 h-14 border-b border-accents-2">
+                <h3 id="modal-title" class="font-medium text-geist-0">Table Data</h3>
+                <button id="modal-close" class="w-8 h-8 rounded-vercel hover:bg-accents-1 flex items-center justify-center transition-colors">
+                    <svg class="w-4 h-4 text-geist-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="modal-content" class="flex-1 overflow-auto p-4"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-accents-2 py-8 mt-12">
+        <div class="max-w-[1200px] mx-auto px-6 text-center">
+            <p class="text-13 text-geist-400">Built for the Supabase community.</p>
+            <p class="text-13 text-geist-400 mt-1">
+                Questions? <a href="mailto:nocodetalks@gmail.com" class="text-geist-0 hover:underline">nocodetalks@gmail.com</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/supabase-client.js"></script>
+    <script src="js/analyzer.js"></script>
+    <script src="js/supabase-detector.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
