@@ -63,7 +63,9 @@
     <nav class="border-b border-accents-2 bg-white sticky top-0 z-50">
         <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <img src="logo.png" alt="PolicyCheck" class="h-8 w-auto">
+                <a href="#" id="home-link" class="cursor-pointer">
+                    <img src="logo.png" alt="PolicyCheck" class="h-8 w-auto">
+                </a>
             </div>
             <div class="flex items-center gap-8 text-14 text-geist-400">
                 <a href="#features" class="hover:text-geist-0 transition-colors">Features</a>
@@ -363,6 +365,31 @@
                         <a href="#section-details" class="sidebar-link">Details</a>
                         <a href="#section-checklist" class="sidebar-link">Security Checklist</a>
                     </nav>
+                    <!-- Feedback Section -->
+                    <div class="mt-6 pt-6 border-t border-accents-2">
+                        <div class="relative" id="feedback-dropdown">
+                            <button id="feedback-button" type="button" class="w-full text-left px-3 py-2 text-14 text-geist-400 hover:text-geist-0 hover:bg-accents-1 rounded-vercel transition-colors flex items-center justify-between">
+                                <span>Share feedback/questions</span>
+                                <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div id="feedback-menu" class="absolute bottom-full left-0 mb-2 w-48 bg-white border border-accents-2 rounded-vercel shadow-lg opacity-0 invisible transition-all duration-200 z-50">
+                                <a href="https://x.com/NocodeTalks" target="_blank" rel="noopener noreferrer" class="block px-4 py-2.5 text-14 text-geist-400 hover:bg-accents-1 hover:text-geist-0 transition-colors flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                    </svg>
+                                    Twitter
+                                </a>
+                                <a href="mailto:nocodetalks@gmail.com" class="block px-4 py-2.5 text-14 text-geist-400 hover:bg-accents-1 hover:text-geist-0 transition-colors flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    Email
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </aside>
 
                 <!-- Main Content -->

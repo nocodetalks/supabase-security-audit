@@ -81,6 +81,14 @@ const UI = {
 
         this.elements.newScanBtn?.addEventListener('click', () => this.showInput());
 
+        // Home link (logo) click handler
+        const homeLink = document.getElementById('home-link');
+        homeLink?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showInput();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
         this.elements.detailsToggle?.addEventListener('click', () => {
             const content = this.elements.detailsContent;
             const chevron = this.elements.detailsToggle.querySelector('.chevron');
@@ -103,6 +111,7 @@ const UI = {
 
         this.setupSidebarNavigation();
         this.setupContactDropdown();
+        this.setupFeedbackDropdown();
     },
 
     setupContactDropdown() {
@@ -134,6 +143,47 @@ const UI = {
         contactMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 contactMenu.classList.add('invisible', 'opacity-0');
+            });
+        });
+    },
+
+    setupFeedbackDropdown() {
+        const feedbackButton = document.getElementById('feedback-button');
+        const feedbackMenu = document.getElementById('feedback-menu');
+        
+        if (!feedbackButton || !feedbackMenu) return;
+
+        // Toggle dropdown on click
+        feedbackButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isVisible = !feedbackMenu.classList.contains('invisible');
+            if (isVisible) {
+                feedbackMenu.classList.add('invisible', 'opacity-0');
+                feedbackButton.querySelector('svg').style.transform = 'rotate(0deg)';
+            } else {
+                feedbackMenu.classList.remove('invisible', 'opacity-0');
+                feedbackButton.querySelector('svg').style.transform = 'rotate(180deg)';
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('feedback-dropdown');
+            if (dropdown && !dropdown.contains(e.target)) {
+                feedbackMenu.classList.add('invisible', 'opacity-0');
+                if (feedbackButton.querySelector('svg')) {
+                    feedbackButton.querySelector('svg').style.transform = 'rotate(0deg)';
+                }
+            }
+        });
+
+        // Close dropdown when clicking on a link
+        feedbackMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                feedbackMenu.classList.add('invisible', 'opacity-0');
+                if (feedbackButton.querySelector('svg')) {
+                    feedbackButton.querySelector('svg').style.transform = 'rotate(0deg)';
+                }
             });
         });
     },
