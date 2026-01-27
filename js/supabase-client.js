@@ -330,6 +330,61 @@ const SupabaseClient = {
     },
 
     /**
+     * List storage bucket contents and build a file-tree structure
+     * @param {string} projectUrl - The Supabase project URL
+     * @param {string} anonKey - The anon/publishable key
+     * @param {string} bucketId - Bucket ID
+     * @param {string|null} accessToken - Optional user access token
+     * @param {string} prefix - Current prefix (folder path)
+     * @returns {Promise<Array>} Flat list of { path, name, isFolder } then build tree in UI
+     */
+    async listBucketContents(projectUrl, anonKey, bucketId, accessToken = null) {
+        const auth = accessToken || anonKey;
+        const headers = {
+            'apikey': anonKey,
+            'Authorization': `Bearer ${auth}`,
+            'Content-Type': 'application/json'
+        };
+
+        const allPaths = [];
+
+        async function listPrefix(currentPrefix) {
+            try {
+                const res = await fetch(`${projectUrl}/storage/v1/object/list/${bucketId}`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({ limit: 1000, prefix: currentPrefix })
+                });
+                if (!res.ok) return;
+                const items = await res.json();
+                if (!Array.isArray(items)) return;
+
+                for (const item of items) {
+                    const name = (item.name || (typeof item === 'string' ? item : '')).toString().trim();
+                    if (!name) continue;
+                    const fullPath = currentPrefix ? `${currentPrefix}${name}` : name;
+                    const isFolder = name.endsWith('/') || (item.metadata && item.metadata?.mimetype === 'application/folder');
+                    if (isFolder) {
+                        const folderPath = fullPath.endsWith('/') ? fullPath : fullPath + '/';
+                        allPaths.push({ path: folderPath, name: name.replace(/\/$/, ''), isFolder: true });
+                        await listPrefix(folderPath);
+                    } else if (name.includes('/')) {
+                        // API returned full path in one go
+                        allPaths.push({ path: fullPath, name: name.split('/').pop(), isFolder: false });
+                    } else {
+                        allPaths.push({ path: fullPath, name, isFolder: false });
+                    }
+                }
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        await listPrefix('');
+        return allPaths;
+    },
+
+    /**
      * Fetch exact row count for a table
      * @param {string} projectUrl - The Supabase project URL
      * @param {string} anonKey - The anon/publishable key

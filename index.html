@@ -409,6 +409,10 @@
                             Functions
                             <span id="sidebar-functions-count" class="sidebar-count">0</span>
                         </a>
+                        <a href="#section-storage" class="sidebar-link">
+                            Storage
+                            <span id="sidebar-storage-count" class="sidebar-count">0</span>
+                        </a>
                         <a href="#section-remediation" class="sidebar-link">Remediation</a>
                         <a href="#section-details" class="sidebar-link">Details</a>
                         <a href="#section-checklist" class="sidebar-link">Security Checklist</a>
@@ -520,6 +524,27 @@
                                 </div>
                             </div>
                             <div id="functions-content"></div>
+                        </div>
+                    </section>
+
+                    <!-- Storage -->
+                    <section id="section-storage" class="scroll-mt-36">
+                        <div class="report-card">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-lg font-medium text-geist-0">Exposed Storage Buckets</h2>
+                                <div class="relative">
+                                    <input
+                                        type="text"
+                                        id="storage-search"
+                                        placeholder="Search..."
+                                        class="h-8 pl-8 pr-3 text-13 rounded-vercel border border-accents-2 bg-white focus:outline-none focus:border-geist-0 transition-colors w-40"
+                                    >
+                                    <svg class="w-3.5 h-3.5 text-geist-500 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div id="storage-content"></div>
                         </div>
                     </section>
 

@@ -5,8 +5,8 @@
 const UI = {
     elements: {},
     charts: { risk: null, issues: null },
-    currentData: { tables: [], functions: [], projectUrl: '', anonKey: '', accessToken: null },
-    filters: { tableSearch: '', functionSearch: '' },
+    currentData: { tables: [], functions: [], buckets: [], projectUrl: '', anonKey: '', accessToken: null },
+    filters: { tableSearch: '', functionSearch: '', storageSearch: '' },
 
     init() {
         this.elements = {
@@ -47,6 +47,7 @@ const UI = {
             issuesContent: document.getElementById('issues-content'),
             tablesContent: document.getElementById('tables-content'),
             functionsContent: document.getElementById('functions-content'),
+            storageContent: document.getElementById('storage-content'),
             bucketsContent: document.getElementById('buckets-content'),
             remediationContent: document.getElementById('remediation-content'),
             copyJsonBtn: document.getElementById('copy-json-btn'),
@@ -56,8 +57,10 @@ const UI = {
             sidebarIssuesCount: document.getElementById('sidebar-issues-count'),
             sidebarTablesCount: document.getElementById('sidebar-tables-count'),
             sidebarFunctionsCount: document.getElementById('sidebar-functions-count'),
+            sidebarStorageCount: document.getElementById('sidebar-storage-count'),
             tableSearch: document.getElementById('table-search'),
             functionSearch: document.getElementById('function-search'),
+            storageSearch: document.getElementById('storage-search'),
             detailsToggle: document.getElementById('details-toggle'),
             detailsContent: document.getElementById('details-content'),
             riskChart: document.getElementById('risk-chart'),
@@ -109,6 +112,11 @@ const UI = {
         this.elements.functionSearch?.addEventListener('input', (e) => {
             this.filters.functionSearch = e.target.value.toLowerCase();
             this.filterAndRenderFunctions();
+        });
+
+        this.elements.storageSearch?.addEventListener('input', (e) => {
+            this.filters.storageSearch = e.target.value.toLowerCase();
+            this.filterAndRenderStorage();
         });
 
         this.elements.modalClose?.addEventListener('click', () => this.closeModal());
@@ -374,6 +382,12 @@ const UI = {
         return div.innerHTML;
     },
 
+    formatCellValue(val) {
+        if (val === null || val === undefined) return '';
+        if (typeof val === 'object') return JSON.stringify(val);
+        return String(val);
+    },
+
     getRiskColor(riskLevel) {
         const colors = { critical: 'text-[#e00]', high: 'text-[#f5a623]', medium: 'text-[#f5a623]', low: 'text-[#0070f3]' };
         return colors[riskLevel] || 'text-[#666]';
@@ -432,6 +446,7 @@ const UI = {
         }
         if (this.elements.sidebarTablesCount) this.elements.sidebarTablesCount.textContent = summary.totalTables;
         if (this.elements.sidebarFunctionsCount) this.elements.sidebarFunctionsCount.textContent = summary.totalFunctions;
+        if (this.elements.sidebarStorageCount) this.elements.sidebarStorageCount.textContent = summary.totalBuckets != null ? summary.totalBuckets : 0;
     },
 
     renderSummary(summary) {
@@ -662,7 +677,8 @@ const UI = {
         }
     },
 
-    async fetchTableData(tableName) {
+    async fetchTableData(tableName, page = 0) {
+        const PAGE_SIZE = 50;
         const { projectUrl, anonKey, accessToken } = this.currentData;
         if (!projectUrl || !anonKey) {
             this.showToast('Missing credentials', 'error');
@@ -673,20 +689,53 @@ const UI = {
         this.openModal(`Loading ${tableName}...`, '<div class="flex items-center justify-center py-12"><div class="w-6 h-6 rounded-full border-2 border-[#eaeaea] border-t-[#000] animate-spin"></div></div>');
 
         try {
-            const response = await fetch(`${projectUrl}/rest/v1/${tableName}?limit=100`, {
-                headers: { 'apikey': anonKey, 'Authorization': `Bearer ${auth}` }
+            const offset = page * PAGE_SIZE;
+            const response = await fetch(`${projectUrl}/rest/v1/${tableName}?limit=${PAGE_SIZE}&offset=${offset}`, {
+                headers: {
+                    'apikey': anonKey,
+                    'Authorization': `Bearer ${auth}`,
+                    'Prefer': 'count=exact'
+                }
             });
 
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const data = await response.json();
+            const contentRange = response.headers.get('Content-Range') || '';
+            const totalMatch = contentRange.split('/')[1];
+            const total = totalMatch && totalMatch !== '*' ? parseInt(totalMatch, 10) : (data.length < PAGE_SIZE ? offset + data.length : null);
 
             if (!data || data.length === 0) {
-                this.openModal(tableName, '<p class="text-center text-[#666] py-8 text-14">No data found</p>');
+                if (page === 0) {
+                    this.openModal(tableName, '<p class="text-center text-[#666] py-8 text-14">No data found</p>');
+                } else {
+                    this.fetchTableData(tableName, 0);
+                }
                 return;
             }
 
             const columns = Object.keys(data[0]);
+            const totalPages = total != null ? Math.max(1, Math.ceil(total / PAGE_SIZE)) : null;
+            const from = offset + 1;
+            const to = offset + data.length;
+            const rangeText = total != null ? `Showing ${from}–${to} of ${total.toLocaleString()} records` : `Showing ${from}–${to} records`;
+            const hasMore = total == null ? data.length >= PAGE_SIZE : page < totalPages - 1;
+            const showPagination = page > 0 || hasMore;
+            const pageLabel = totalPages != null ? `Page ${page + 1} of ${totalPages}` : `Page ${page + 1}`;
+
+            const paginationHtml = showPagination
+                ? `
+                <div class="flex items-center justify-between mt-4 pt-4 border-t border-[#eaeaea]">
+                    <p class="text-13 text-[#888]">${rangeText}</p>
+                    <div class="flex items-center gap-2">
+                        <button type="button" class="table-data-page-btn h-8 px-3 text-13 font-medium rounded-vercel border border-[#eaeaea] text-[#666] hover:border-[#000] hover:text-[#000] disabled:opacity-50 disabled:cursor-not-allowed transition-colors" data-table="${this.escapeHtml(tableName)}" data-page="${page - 1}" ${page <= 0 ? 'disabled' : ''}>Prev</button>
+                        <span class="text-13 text-[#666] px-2">${pageLabel}</span>
+                        <button type="button" class="table-data-page-btn h-8 px-3 text-13 font-medium rounded-vercel border border-[#eaeaea] text-[#666] hover:border-[#000] hover:text-[#000] disabled:opacity-50 disabled:cursor-not-allowed transition-colors" data-table="${this.escapeHtml(tableName)}" data-page="${page + 1}" ${!hasMore ? 'disabled' : ''}>Next</button>
+                    </div>
+                </div>
+                `
+                : `<p class="text-13 text-[#888] mt-4">${rangeText}</p>`;
+
             const tableHtml = `
                 <div class="overflow-x-auto">
                     <table class="w-full text-13 border-collapse">
@@ -696,18 +745,23 @@ const UI = {
                             </tr>
                         </thead>
                         <tbody>
-                            ${data.slice(0, 50).map(row => `
+                            ${data.map(row => `
                                 <tr class="hover:bg-[#fafafa]">
-                                    ${columns.map(col => `<td class="py-2 px-3 border border-[#eaeaea] text-[#666] max-w-xs truncate">${this.escapeHtml(String(row[col] ?? ''))}</td>`).join('')}
+                                    ${columns.map(col => { const raw = this.formatCellValue(row[col]); const display = this.escapeHtml(raw); const titleSafe = (display.length > 400 ? display.slice(0, 397) + '...' : display).replace(/"/g, '&quot;'); return `<td class="py-2 px-3 border border-[#eaeaea] text-[#666] max-w-xs truncate" title="${titleSafe}">${display}</td>`; }).join('')}
                                 </tr>
                             `).join('')}
                         </tbody>
                     </table>
                 </div>
-                <p class="text-13 text-[#888] mt-4">Showing first ${Math.min(data.length, 50)} of ${data.length} records (limited to 100)</p>
+                ${paginationHtml}
             `;
 
             this.openModal(`${tableName} Data`, tableHtml);
+
+            this.elements.modalContent?.querySelectorAll('.table-data-page-btn').forEach(btn => {
+                if (btn.disabled) return;
+                btn.addEventListener('click', () => this.fetchTableData(btn.dataset.table, parseInt(btn.dataset.page, 10)));
+            });
         } catch (error) {
             this.openModal(tableName, `<p class="text-center text-[#e00] py-8 text-14">Failed to fetch data: ${this.escapeHtml(error.message)}</p>`);
         }
@@ -784,6 +838,125 @@ const UI = {
                     this.showCallFunctionModal(funcName, params);
                 });
             });
+        }
+    },
+
+    filterAndRenderStorage() {
+        let buckets = [...(this.currentData.buckets || [])];
+        if (this.filters.storageSearch) {
+            const q = this.filters.storageSearch;
+            buckets = buckets.filter(b => (b.name || b.id || '').toLowerCase().includes(q));
+        }
+        this.renderStorageList(buckets);
+    },
+
+    renderStorageList(buckets) {
+        if (!buckets || buckets.length === 0) {
+            if (this.elements.storageContent) {
+                this.elements.storageContent.innerHTML = `<p class="text-[#666] text-center py-8 text-14">No storage buckets found</p>`;
+            }
+            return;
+        }
+
+        const html = `
+            <div class="overflow-x-auto">
+                <table class="w-full text-13">
+                    <thead>
+                        <tr class="border-b border-[#eaeaea]">
+                            <th class="text-left py-3 px-4 font-medium text-[#000]">Bucket Name</th>
+                            <th class="text-center py-3 px-4 font-medium text-[#000]">Access</th>
+                            <th class="text-center py-3 px-4 font-medium text-[#000]">Can List</th>
+                            <th class="text-center py-3 px-4 font-medium text-[#000]">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${buckets.map(bucket => {
+                            const bucketName = bucket.name || bucket.id || 'unknown';
+                            const isPublic = bucket.public || bucket.access?.isPublic;
+                            const canList = bucket.access?.canList;
+                            return `
+                                <tr class="border-b border-[#eaeaea] hover:bg-[#fafafa] transition-colors">
+                                    <td class="py-3 px-4">
+                                        <span class="font-mono text-[#000] font-medium">${this.escapeHtml(bucketName)}</span>
+                                    </td>
+                                    <td class="py-3 px-4 text-center">
+                                        ${isPublic ? '<span class="badge-severity badge-medium">Public</span>' : '<span class="badge-severity badge-success">Private</span>'}
+                                    </td>
+                                    <td class="py-3 px-4 text-center text-[#666]">${canList ? 'Yes' : 'No'}</td>
+                                    <td class="py-3 px-4 text-center">
+                                        <button class="view-bucket-btn h-7 px-3 text-13 font-medium rounded-vercel border border-[#eaeaea] text-[#666] hover:border-[#000] hover:text-[#000] transition-colors" data-bucket="${this.escapeHtml(bucketName)}">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        if (this.elements.storageContent) {
+            this.elements.storageContent.innerHTML = html;
+            this.elements.storageContent.querySelectorAll('.view-bucket-btn').forEach(btn => {
+                btn.addEventListener('click', () => this.fetchBucketContents(btn.dataset.bucket));
+            });
+        }
+    },
+
+    renderStorage(buckets) {
+        this.currentData.buckets = buckets || [];
+        this.filterAndRenderStorage();
+    },
+
+    buildFileTreeHtml(paths) {
+        if (!paths || paths.length === 0) {
+            return '<p class="text-[#666] text-14 py-4">This bucket is empty or listing is not allowed.</p>';
+        }
+        const tree = { _children: {} };
+        const addPath = (parts, isFolder) => {
+            let cur = tree._children;
+            for (let i = 0; i < parts.length; i++) {
+                const p = parts[i];
+                const isLast = i === parts.length - 1;
+                if (!cur[p]) cur[p] = { _children: {}, _isFolder: isFolder || !isLast };
+                if (isLast) cur[p]._isFolder = isFolder;
+                cur = cur[p]._children;
+            }
+        };
+        for (const { path, name, isFolder } of paths) {
+            const parts = path.replace(/\/$/, '').split('/').filter(Boolean);
+            if (parts.length) addPath(parts, isFolder);
+        }
+        const renderNode = (node, depth) => {
+            const entries = Object.entries(node._children || {}).sort(([a], [b]) => a.localeCompare(b));
+            return entries.map(([name, child]) => {
+                const isFolder = child._isFolder || Object.keys(child._children || {}).length > 0;
+                const indent = depth * 16;
+                const icon = isFolder
+                    ? '<svg class="w-4 h-4 text-[#888] inline-block mr-1.5 align-middle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>'
+                    : '<svg class="w-4 h-4 text-[#888] inline-block mr-1.5 align-middle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>';
+                const label = isFolder ? name + '/' : name;
+                const childHtml = renderNode(child, depth + 1);
+                return `<div class="py-0.5" style="padding-left: ${indent}px;"><span class="inline-flex items-center text-13 text-[#333] font-mono">${icon}${this.escapeHtml(label)}</span>${childHtml ? `<div>${childHtml}</div>` : ''}</div>`;
+            }).join('');
+        };
+        return `<div class="font-mono text-13 text-[#333] space-y-0">${renderNode(tree, 0)}</div>`;
+    },
+
+    async fetchBucketContents(bucketId) {
+        const { projectUrl, anonKey, accessToken } = this.currentData;
+        if (!projectUrl || !anonKey) {
+            this.showToast('Missing credentials', 'error');
+            return;
+        }
+        this.openModal(`Loading ${this.escapeHtml(bucketId)}...`, '<div class="flex items-center justify-center py-12"><div class="w-6 h-6 rounded-full border-2 border-[#eaeaea] border-t-[#000] animate-spin"></div></div>');
+        try {
+            const paths = await SupabaseClient.listBucketContents(projectUrl, anonKey, bucketId, accessToken);
+            const treeHtml = this.buildFileTreeHtml(paths);
+            this.openModal(`Bucket: ${this.escapeHtml(bucketId)}`, treeHtml);
+        } catch (e) {
+            this.openModal(`Bucket: ${this.escapeHtml(bucketId)}`, `<p class="text-center text-[#e00] py-8 text-14">Failed to load contents: ${this.escapeHtml(e && e.message || 'Unknown error')}</p>`);
         }
     },
 
@@ -1027,6 +1200,7 @@ CREATE POLICY "Allow authenticated" ON public.${table.name}
         this.renderIssues(report.issues);
         this.renderTables(report.tables);
         this.renderFunctions(report.functions);
+        this.renderStorage(report.buckets || []);
         this.renderJWTInfo(report.jwtInfo);
         this.renderDataExposure(report.dataExposure);
         this.renderBuckets(report.buckets);

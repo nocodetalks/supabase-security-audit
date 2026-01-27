@@ -781,11 +781,14 @@ CREATE POLICY "Admin only" ON table_name
         const totalPublicRecords = additionalData.totalPublicRecords ||
             tablesWithAccess.reduce((sum, t) => sum + (t.access?.rowCount || 0), 0);
 
+        const totalBuckets = (additionalData.buckets && additionalData.buckets.length) || 0;
+
         // Build report (using exposed counts calculated above)
         const report = {
             summary: {
                 totalTables: exposedTablesCount,
                 totalFunctions: exposedFunctionsCount,
+                totalBuckets,
                 totalIssues: allIssues.length,
                 totalPublicRecords,
                 riskScore
