@@ -5,6 +5,8 @@
 
 const App = {
     currentReport: null,
+    authToken: null,
+    authUser: null,
 
     /**
      * Initialize the application
@@ -12,6 +14,14 @@ const App = {
     init() {
         UI.init();
         this.setupEventListeners();
+    },
+
+    /**
+     * Get analysis mode: anonymous or authenticated user
+     * @returns {string} 'anonymous' | 'authenticated'
+     */
+    getAuthMode() {
+        return UI.elements.modeAuthenticated?.classList.contains('active') ? 'authenticated' : 'anonymous';
     },
 
     /**
@@ -111,11 +121,64 @@ const App = {
                 return null;
             }
 
+            // If authenticated user mode, require email and password
+            const authMode = this.getAuthMode();
+            if (authMode === 'authenticated') {
+                const email = (UI.elements.userEmail?.value || '').trim();
+                const password = (UI.elements.userPassword?.value || '').trim();
+                if (!email) {
+                    UI.showError('Please enter your email for Authenticated User Mode');
+                    return null;
+                }
+                if (!password) {
+                    UI.showError('Please enter your password for Authenticated User Mode');
+                    return null;
+                }
+                const cleanUrl = projectUrl.replace(/\/+$/, '');
+                return { mode: 'manual', projectUrl: cleanUrl, anonKey, authMode: 'authenticated', email, password };
+            }
+
             // Remove trailing slash from URL
             const cleanUrl = projectUrl.replace(/\/+$/, '');
 
-            return { mode: 'manual', projectUrl: cleanUrl, anonKey };
+            return { mode: 'manual', projectUrl: cleanUrl, anonKey, authMode: 'anonymous' };
         }
+    },
+
+    /**
+     * Sign in with email and password to get access token
+     * @param {string} projectUrl - Supabase project URL
+     * @param {string} anonKey - Anon key
+     * @param {string} email - User email
+     * @param {string} password - User password
+     * @returns {Promise<{accessToken: string, user: Object, email: string}>}
+     */
+    async signIn(projectUrl, anonKey, email, password) {
+        const response = await fetch(
+            `${projectUrl}/auth/v1/token?grant_type=password`,
+            {
+                method: 'POST',
+                headers: {
+                    'apikey': anonKey,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            const msg = errorData.error_description || errorData.message || response.statusText;
+            throw new Error(msg || `Sign in failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            user: data.user,
+            email: email
+        };
     },
 
     /**
@@ -174,21 +237,54 @@ const App = {
             anonKey = inputs.anonKey;
         }
 
+        const authMode = this.getAuthMode();
+        let accessToken = null;
+        let authUser = null;
+
+        if (authMode === 'authenticated') {
+            const email = (inputs.email || UI.elements.userEmail?.value || '').trim();
+            const password = (inputs.password || UI.elements.userPassword?.value || '').trim();
+            if (!email || !password) {
+                UI.showError('Please enter email and password for Authenticated User Mode');
+                return;
+            }
+            try {
+                UI.showLoading('Signing in...');
+                const signInResult = await this.signIn(projectUrl, anonKey, email, password);
+                accessToken = signInResult.accessToken;
+                authUser = { email: signInResult.email, id: signInResult.user?.id };
+                this.authToken = accessToken;
+                this.authUser = authUser;
+            } catch (err) {
+                console.error('Sign in failed:', err);
+                const msg = err.message || 'Sign in failed';
+                if (msg.toLowerCase().includes('invalid') || msg.includes('401') || msg.includes('400')) {
+                    UI.showError('Invalid email or password. Check your credentials and try again.');
+                } else {
+                    UI.showError(msg);
+                }
+                return;
+            }
+        } else {
+            this.authToken = null;
+            this.authUser = null;
+        }
+
         try {
-            // Step 0: Decode JWT
+            // Step 0: Decode JWT (use access token or anon key)
             UI.showLoading('Analyzing JWT token...');
-            const jwtInfo = Analyzer.decodeJWT(anonKey);
+            const jwtInfo = Analyzer.decodeJWT(accessToken || anonKey);
 
             // Step 1: Fetch OpenAPI spec
             UI.showLoading('Fetching API specification...');
-            const spec = await SupabaseClient.fetchOpenAPISpec(projectUrl, anonKey);
+            const spec = await SupabaseClient.fetchOpenAPISpec(projectUrl, anonKey, accessToken);
 
             // Step 2: Parse the spec
             UI.showLoading('Parsing API schema...');
             const parsedData = Analyzer.parseOpenAPISpec(spec);
 
             if (parsedData.tables.length === 0 && parsedData.functions.length === 0) {
-                UI.showError('No tables or functions found. The project may not have any public API exposed, or the anon key may be invalid.');
+                UI.showError('No tables or functions found. The project may not have any public API exposed, or the credentials may be invalid.');
                 return;
             }
 
@@ -198,7 +294,7 @@ const App = {
 
             for (const table of parsedData.tables) {
                 try {
-                    const access = await SupabaseClient.testTableAccess(projectUrl, anonKey, table.name);
+                    const access = await SupabaseClient.testTableAccess(projectUrl, anonKey, table.name, accessToken);
                     tableAccessResults.set(table.name, access);
                 } catch (e) {
                     tableAccessResults.set(table.name, { error: e.message });
@@ -214,11 +310,10 @@ const App = {
                 const access = tableAccessResults.get(table.name);
                 if (access && access.select) {
                     try {
-                        const count = await SupabaseClient.fetchTableRowCount(projectUrl, anonKey, table.name);
+                        const count = await SupabaseClient.fetchTableRowCount(projectUrl, anonKey, table.name, accessToken);
                         if (count !== null) {
                             tableRowCounts.set(table.name, count);
                             totalPublicRecords += count;
-                            // Update the access results with exact count
                             access.rowCount = count;
                         }
                     } catch (e) {
@@ -233,7 +328,7 @@ const App = {
 
             for (const func of parsedData.functions) {
                 try {
-                    const result = await SupabaseClient.testRPCFunction(projectUrl, anonKey, func.name);
+                    const result = await SupabaseClient.testRPCFunction(projectUrl, anonKey, func.name, accessToken);
                     functionTestResults.set(func.name, result);
                 } catch (e) {
                     functionTestResults.set(func.name, { error: e.message });
@@ -244,9 +339,9 @@ const App = {
             UI.showLoading('Scanning storage buckets...');
             let buckets = [];
             try {
-                const bucketList = await SupabaseClient.listStorageBuckets(projectUrl, anonKey);
+                const bucketList = await SupabaseClient.listStorageBuckets(projectUrl, anonKey, accessToken);
                 for (const bucket of bucketList) {
-                    const access = await SupabaseClient.testBucketAccess(projectUrl, anonKey, bucket.id || bucket.name);
+                    const access = await SupabaseClient.testBucketAccess(projectUrl, anonKey, bucket.id || bucket.name, accessToken);
                     buckets.push({
                         ...bucket,
                         access
@@ -260,14 +355,14 @@ const App = {
             UI.showLoading('Checking realtime configuration...');
             let realtime = null;
             try {
-                realtime = await SupabaseClient.checkRealtimeConfig(projectUrl, anonKey);
+                realtime = await SupabaseClient.checkRealtimeConfig(projectUrl, anonKey, accessToken);
             } catch (e) {
                 // Realtime check failed
             }
 
             // Step 7: Try to get RLS policies
             UI.showLoading('Checking RLS policies...');
-            const rlsPolicies = await SupabaseClient.queryRLSPolicies(projectUrl, anonKey);
+            const rlsPolicies = await SupabaseClient.queryRLSPolicies(projectUrl, anonKey, accessToken);
 
             // Step 8: Generate report
             UI.showLoading('Generating security report...');
@@ -281,7 +376,9 @@ const App = {
                     realtime,
                     rlsPolicies,
                     totalPublicRecords,
-                    tableRowCounts: Object.fromEntries(tableRowCounts)
+                    tableRowCounts: Object.fromEntries(tableRowCounts),
+                    mode: authMode,
+                    authUser: authUser
                 }
             );
 

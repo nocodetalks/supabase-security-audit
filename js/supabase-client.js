@@ -8,16 +8,18 @@ const SupabaseClient = {
      * Fetch the OpenAPI specification from Supabase
      * @param {string} projectUrl - The Supabase project URL
      * @param {string} anonKey - The anon/publishable key
+     * @param {string|null} accessToken - Optional user access token; when provided used for Authorization
      * @returns {Promise<Object>} The OpenAPI spec
      */
-    async fetchOpenAPISpec(projectUrl, anonKey) {
+    async fetchOpenAPISpec(projectUrl, anonKey, accessToken = null) {
         const url = `${projectUrl}/rest/v1/`;
+        const auth = accessToken || anonKey;
 
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'apikey': anonKey,
-                'Authorization': `Bearer ${anonKey}`,
+                'Authorization': `Bearer ${auth}`,
                 'Accept': 'application/openapi+json'
             }
         });
@@ -31,14 +33,15 @@ const SupabaseClient = {
 
     /**
      * Test access to a specific table using safe, read-only methods
-     * Uses OPTIONS and HEAD requests to check permissions without modifying data
      * @param {string} projectUrl - The Supabase project URL
      * @param {string} anonKey - The anon/publishable key
      * @param {string} tableName - Name of the table to test
+     * @param {string|null} accessToken - Optional user access token
      * @returns {Promise<Object>} Access test results
      */
-    async testTableAccess(projectUrl, anonKey, tableName) {
+    async testTableAccess(projectUrl, anonKey, tableName, accessToken = null) {
         const baseUrl = `${projectUrl}/rest/v1/${tableName}`;
+        const auth = accessToken || anonKey;
         const results = {
             select: false,
             insert: 'unknown',
@@ -50,7 +53,7 @@ const SupabaseClient = {
 
         const headers = {
             'apikey': anonKey,
-            'Authorization': `Bearer ${anonKey}`,
+            'Authorization': `Bearer ${auth}`,
             'Content-Type': 'application/json',
             'Prefer': 'count=exact'
         };
@@ -85,7 +88,7 @@ const SupabaseClient = {
                 method: 'OPTIONS',
                 headers: {
                     'apikey': anonKey,
-                    'Authorization': `Bearer ${anonKey}`
+                    'Authorization': `Bearer ${auth}`
                 }
             });
 
@@ -110,12 +113,14 @@ const SupabaseClient = {
      * Attempt to query system catalogs for RLS information
      * @param {string} projectUrl - The Supabase project URL
      * @param {string} anonKey - The anon/publishable key
+     * @param {string|null} accessToken - Optional user access token
      * @returns {Promise<Object|null>} RLS policy info or null if not accessible
      */
-    async queryRLSPolicies(projectUrl, anonKey) {
+    async queryRLSPolicies(projectUrl, anonKey, accessToken = null) {
+        const auth = accessToken || anonKey;
         const headers = {
             'apikey': anonKey,
-            'Authorization': `Bearer ${anonKey}`,
+            'Authorization': `Bearer ${auth}`,
             'Content-Type': 'application/json'
         };
 
@@ -156,13 +161,15 @@ const SupabaseClient = {
      * @param {string} projectUrl - The Supabase project URL
      * @param {string} anonKey - The anon/publishable key
      * @param {string} functionName - Name of the RPC function
+     * @param {string|null} accessToken - Optional user access token
      * @returns {Promise<Object>} Function test results
      */
-    async testRPCFunction(projectUrl, anonKey, functionName) {
+    async testRPCFunction(projectUrl, anonKey, functionName, accessToken = null) {
         const url = `${projectUrl}/rest/v1/rpc/${functionName}`;
+        const auth = accessToken || anonKey;
         const headers = {
             'apikey': anonKey,
-            'Authorization': `Bearer ${anonKey}`,
+            'Authorization': `Bearer ${auth}`,
             'Content-Type': 'application/json'
         };
 
@@ -238,13 +245,15 @@ const SupabaseClient = {
      * List storage buckets (if accessible)
      * @param {string} projectUrl - The Supabase project URL
      * @param {string} anonKey - The anon/publishable key
+     * @param {string|null} accessToken - Optional user access token
      * @returns {Promise<Array>} Array of bucket info
      */
-    async listStorageBuckets(projectUrl, anonKey) {
+    async listStorageBuckets(projectUrl, anonKey, accessToken = null) {
         const url = `${projectUrl}/storage/v1/bucket`;
+        const auth = accessToken || anonKey;
         const headers = {
             'apikey': anonKey,
-            'Authorization': `Bearer ${anonKey}`
+            'Authorization': `Bearer ${auth}`
         };
 
         try {
@@ -269,12 +278,14 @@ const SupabaseClient = {
      * @param {string} projectUrl - The Supabase project URL
      * @param {string} anonKey - The anon/publishable key
      * @param {string} bucketId - Bucket ID to test
+     * @param {string|null} accessToken - Optional user access token
      * @returns {Promise<Object>} Bucket access results
      */
-    async testBucketAccess(projectUrl, anonKey, bucketId) {
+    async testBucketAccess(projectUrl, anonKey, bucketId, accessToken = null) {
+        const auth = accessToken || anonKey;
         const headers = {
             'apikey': anonKey,
-            'Authorization': `Bearer ${anonKey}`
+            'Authorization': `Bearer ${auth}`
         };
 
         const result = {
@@ -323,12 +334,14 @@ const SupabaseClient = {
      * @param {string} projectUrl - The Supabase project URL
      * @param {string} anonKey - The anon/publishable key
      * @param {string} tableName - Name of the table
+     * @param {string|null} accessToken - Optional user access token
      * @returns {Promise<number|null>} Row count or null if not accessible
      */
-    async fetchTableRowCount(projectUrl, anonKey, tableName) {
+    async fetchTableRowCount(projectUrl, anonKey, tableName, accessToken = null) {
+        const auth = accessToken || anonKey;
         const headers = {
             'apikey': anonKey,
-            'Authorization': `Bearer ${anonKey}`,
+            'Authorization': `Bearer ${auth}`,
             'Prefer': 'count=exact'
         };
 
@@ -376,9 +389,10 @@ const SupabaseClient = {
      * Check realtime configuration
      * @param {string} projectUrl - The Supabase project URL
      * @param {string} anonKey - The anon/publishable key
+     * @param {string|null} accessToken - Optional user access token
      * @returns {Promise<Object>} Realtime configuration info
      */
-    async checkRealtimeConfig(projectUrl, anonKey) {
+    async checkRealtimeConfig(projectUrl, anonKey, accessToken = null) {
         // Realtime endpoint typically doesn't support CORS from browsers
         // So we just return unknown status - this is expected behavior
         return {

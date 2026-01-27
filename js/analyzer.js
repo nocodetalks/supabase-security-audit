@@ -814,6 +814,12 @@ CREATE POLICY "Admin only" ON table_name
             report.realtime = additionalData.realtime;
         }
 
+        // Add analysis mode and auth user (for authenticated user mode)
+        report.mode = additionalData.mode || 'anonymous';
+        if (additionalData.authUser) {
+            report.authUser = additionalData.authUser;
+        }
+
         // Generate remediation code
         report.remediations = this.generateRemediations(allIssues, tablesWithAccess);
 

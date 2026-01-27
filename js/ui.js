@@ -5,7 +5,7 @@
 const UI = {
     elements: {},
     charts: { risk: null, issues: null },
-    currentData: { tables: [], functions: [], projectUrl: '', anonKey: '' },
+    currentData: { tables: [], functions: [], projectUrl: '', anonKey: '', accessToken: null },
     filters: { tableSearch: '', functionSearch: '' },
 
     init() {
@@ -13,6 +13,11 @@ const UI = {
             form: document.getElementById('audit-form'),
             projectUrl: document.getElementById('project-url'),
             anonKey: document.getElementById('anon-key'),
+            modeAnonymous: document.getElementById('mode-anonymous'),
+            modeAuthenticated: document.getElementById('mode-authenticated'),
+            authFields: document.getElementById('auth-fields'),
+            userEmail: document.getElementById('user-email'),
+            userPassword: document.getElementById('user-password'),
             toggleKey: document.getElementById('toggle-key'),
             eyeIcon: document.getElementById('eye-icon'),
             eyeOffIcon: document.getElementById('eye-off-icon'),
@@ -108,6 +113,18 @@ const UI = {
 
         this.elements.modalClose?.addEventListener('click', () => this.closeModal());
         this.elements.modalBackdrop?.addEventListener('click', () => this.closeModal());
+
+        // Analysis mode toggle (Anonymous / Authenticated User Mode)
+        this.elements.modeAnonymous?.addEventListener('click', () => {
+            this.elements.modeAnonymous?.classList.add('active');
+            this.elements.modeAuthenticated?.classList.remove('active');
+            this.elements.authFields?.classList.add('hidden');
+        });
+        this.elements.modeAuthenticated?.addEventListener('click', () => {
+            this.elements.modeAuthenticated?.classList.add('active');
+            this.elements.modeAnonymous?.classList.remove('active');
+            this.elements.authFields?.classList.remove('hidden');
+        });
 
         this.setupSidebarNavigation();
         this.setupContactDropdown();
@@ -382,7 +399,7 @@ const UI = {
         this.elements.dataModal?.classList.add('hidden');
     },
 
-    renderStickyHeader(summary) {
+    renderStickyHeader(summary, report = null) {
         const riskLevel = summary.riskScore.riskLevel;
         if (this.elements.headerScore) {
             this.elements.headerScore.className = `score-badge score-${riskLevel}`;
@@ -390,12 +407,18 @@ const UI = {
         }
 
         const recordsDisplay = this.formatNumber(summary.totalPublicRecords || 0);
+        const isAuthenticated = report?.mode === 'authenticated';
+        const authLine = isAuthenticated && report?.authUser?.email
+            ? `<span class="text-[#0070f3] font-medium" title="Logged in as">${this.escapeHtml(report.authUser.email)}</span>`
+            : '';
         if (this.elements.headerStats) {
-            this.elements.headerStats.innerHTML = `
-                <span><strong class="text-[#000]">${summary.totalTables}</strong> Tables</span>
-                <span><strong class="text-[#e00]">${recordsDisplay}</strong> Records</span>
-                <span><strong class="text-[#000]">${summary.totalIssues}</strong> Issues</span>
-            `;
+            this.elements.headerStats.innerHTML = [
+                isAuthenticated ? `<span class="px-2 py-0.5 rounded text-xs font-medium bg-accents-1 border border-accents-2 text-geist-600">Authenticated</span>` : '',
+                authLine,
+                `<span><strong class="text-[#000]">${summary.totalTables}</strong> Tables</span>`,
+                `<span><strong class="text-[#e00]">${recordsDisplay}</strong> Records</span>`,
+                `<span><strong class="text-[#000]">${summary.totalIssues}</strong> Issues</span>`
+            ].filter(Boolean).join('');
         }
     },
 
@@ -640,17 +663,18 @@ const UI = {
     },
 
     async fetchTableData(tableName) {
-        const { projectUrl, anonKey } = this.currentData;
+        const { projectUrl, anonKey, accessToken } = this.currentData;
         if (!projectUrl || !anonKey) {
             this.showToast('Missing credentials', 'error');
             return;
         }
+        const auth = accessToken || anonKey;
 
         this.openModal(`Loading ${tableName}...`, '<div class="flex items-center justify-center py-12"><div class="w-6 h-6 rounded-full border-2 border-[#eaeaea] border-t-[#000] animate-spin"></div></div>');
 
         try {
             const response = await fetch(`${projectUrl}/rest/v1/${tableName}?limit=100`, {
-                headers: { 'apikey': anonKey, 'Authorization': `Bearer ${anonKey}` }
+                headers: { 'apikey': anonKey, 'Authorization': `Bearer ${auth}` }
             });
 
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -800,11 +824,12 @@ const UI = {
     },
 
     async executeRpcFunction(funcName, parameters) {
-        const { projectUrl, anonKey } = this.currentData;
+        const { projectUrl, anonKey, accessToken } = this.currentData;
         if (!projectUrl || !anonKey) {
             this.showToast('Missing credentials', 'error');
             return;
         }
+        const auth = accessToken || anonKey;
 
         const params = {};
         for (const param of parameters) {
@@ -831,7 +856,7 @@ const UI = {
         try {
             const response = await fetch(`${projectUrl}/rest/v1/rpc/${funcName}`, {
                 method: 'POST',
-                headers: { 'apikey': anonKey, 'Authorization': `Bearer ${anonKey}`, 'Content-Type': 'application/json' },
+                headers: { 'apikey': anonKey, 'Authorization': `Bearer ${auth}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify(params)
             });
 
@@ -992,8 +1017,9 @@ CREATE POLICY "Allow authenticated" ON public.${table.name}
     renderReport(report) {
         this.currentData.projectUrl = UI.elements.projectUrl?.value?.trim()?.replace(/\/+$/, '') || '';
         this.currentData.anonKey = UI.elements.anonKey?.value?.trim() || '';
+        this.currentData.accessToken = (typeof App !== 'undefined' && App.authToken) ? App.authToken : null;
 
-        this.renderStickyHeader(report.summary);
+        this.renderStickyHeader(report.summary, report);
         this.updateSidebarCounts(report.summary);
         this.renderSummary(report.summary);
         this.renderRiskScore(report.summary.riskScore);
