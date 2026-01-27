@@ -385,7 +385,7 @@ const App = {
                 <head>
                     <style>
                         * { box-sizing: border-box; margin: 0; padding: 0; }
-                        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; color: #374151; }
+                        body { font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; color: #374151; }
                     </style>
                 </head>
                 <body>${pdfContent}</body>
@@ -538,7 +538,7 @@ const App = {
         }
 
         return `
-            <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #374151; padding: 20px;">
+            <div style="font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif; color: #374151; padding: 20px;">
                 <!-- Header -->
                 <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #0a5757; page-break-after: avoid;">
                     <h1 style="color: #0a5757; margin: 0 0 8px 0; font-size: 24px;">PolicyCheck Security Report</h1>
