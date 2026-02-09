@@ -1,0 +1,131 @@
+---
+---
+
+<section id="hero-section" class="py-20 md:py-28">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accents-2 text-13 text-geist-400 mb-6">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Free & Open Source
+      </div>
+      <h1 class="text-5xl md:text-6xl font-semibold text-geist-0 mb-4 tracking-[-0.04em] leading-[1.1]">
+        PolicyCheck
+      </h1>
+      <p class="text-xl text-geist-400 max-w-xl mx-auto leading-relaxed">
+        Analyze your Supabase project's public API exposure. See what attackers can see with just your anon key.
+      </p>
+    </div>
+
+    <!-- Input Form -->
+    <div class="max-w-md mx-auto">
+      <!-- Analysis Mode Toggle -->
+      <div class="flex gap-0 p-1 rounded-vercel border border-accents-2 bg-accents-1 mb-4">
+        <button type="button" id="mode-anonymous" class="flex-1 h-9 px-4 rounded-vercel text-13 font-medium transition-colors bg-white border border-accents-2 shadow-sm mode-toggle active">
+          Anonymous Mode
+        </button>
+        <button type="button" id="mode-authenticated" class="flex-1 h-9 px-4 rounded-vercel text-13 font-medium text-geist-400 hover:text-geist-0 transition-colors mode-toggle">
+          Authenticated User Mode
+        </button>
+      </div>
+      <form id="audit-form">
+        <!-- Manual Entry Mode -->
+        <div id="manual-mode" class="p-6 rounded-vercel border border-accents-2 bg-white space-y-4">
+          <div>
+            <label for="project-url" class="block text-14 text-geist-0 mb-2">
+              Project URL
+            </label>
+            <input
+              type="url"
+              id="project-url"
+              placeholder="https://your-project.supabase.co"
+              class="w-full h-10 px-3 rounded-vercel border border-accents-2 bg-white text-14 text-geist-0 placeholder:text-geist-500 focus:outline-none focus:border-geist-0 focus:ring-1 focus:ring-geist-0 transition-colors"
+            />
+            <p class="text-xs text-geist-500 mt-1.5">
+              Find it in: <span class="font-medium">Project → Project Settings → Data API</span>
+            </p>
+          </div>
+
+          <div>
+            <label for="anon-key" class="block text-14 text-geist-0 mb-2">
+              Anon Key
+            </label>
+            <div class="relative">
+              <input
+                type="password"
+                id="anon-key"
+                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                class="w-full h-10 px-3 pr-10 rounded-vercel border border-accents-2 bg-white text-14 text-geist-0 placeholder:text-geist-500 focus:outline-none focus:border-geist-0 focus:ring-1 focus:ring-geist-0 transition-colors font-mono"
+              />
+              <button
+                type="button"
+                id="toggle-key"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-geist-500 hover:text-geist-0 transition-colors"
+              >
+                <svg id="eye-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <svg id="eye-off-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                </svg>
+              </button>
+            </div>
+            <p class="text-xs text-geist-500 mt-1.5">
+              Find it in: <span class="font-medium">Project → Project Settings → API KEY</span>
+            </p>
+            <p class="text-xs text-geist-500 mt-1">
+              <span class="font-medium">Note:</span> The anon key is a public key and safe to share.
+            </p>
+          </div>
+
+          <!-- Authenticated User Mode fields -->
+          <div id="auth-fields" class="hidden space-y-4 pt-2 border-t border-accents-2">
+            <div>
+              <label for="user-email" class="block text-14 text-geist-0 mb-2">Email</label>
+              <input
+                type="email"
+                id="user-email"
+                placeholder="user@example.com"
+                autocomplete="email"
+                class="w-full h-10 px-3 rounded-vercel border border-accents-2 bg-white text-14 text-geist-0 placeholder:text-geist-500 focus:outline-none focus:border-geist-0 focus:ring-1 focus:ring-geist-0 transition-colors"
+              />
+              <p class="text-xs text-geist-500 mt-1.5">
+                An existing user account in your Supabase project
+              </p>
+            </div>
+            <div>
+              <label for="user-password" class="block text-14 text-geist-0 mb-2">Password</label>
+              <input
+                type="password"
+                id="user-password"
+                placeholder="Your account password"
+                autocomplete="current-password"
+                class="w-full h-10 px-3 rounded-vercel border border-accents-2 bg-white text-14 text-geist-0 placeholder:text-geist-500 focus:outline-none focus:border-geist-0 focus:ring-1 focus:ring-geist-0 transition-colors"
+              />
+              <p class="text-xs text-geist-500 mt-1.5">
+                Used only to sign in and fetch data; never stored
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          id="analyze-btn"
+          class="w-full h-10 rounded-vercel bg-geist-0 text-white text-14 font-medium hover:bg-geist-200 transition-colors flex items-center justify-center gap-2 mt-4"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          <span id="analyze-btn-text">Analyze Security</span>
+        </button>
+      </form>
+
+      <p class="text-center text-13 text-geist-500 mt-4">
+        100% client-side. Your keys never leave your browser.
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,264 @@
+---
+---
+
+<section id="results-section" class="hidden py-8">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <!-- Sticky Header -->
+    <div id="results-header" class="sticky top-16 z-40 -mx-6 px-6 py-4 bg-white border-b border-accents-2 mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-6">
+          <div id="header-score" class="flex items-center gap-3"></div>
+          <div id="header-stats" class="flex items-center gap-4 text-13 text-geist-400"></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="new-scan-btn" class="h-8 px-3 rounded-vercel border border-accents-2 text-13 font-medium text-geist-400 hover:border-geist-0 hover:text-geist-0 transition-colors">
+            New Scan
+          </button>
+          <button id="copy-json-btn" class="h-8 px-3 rounded-vercel border border-accents-2 text-13 font-medium text-geist-400 hover:border-geist-0 hover:text-geist-0 transition-colors flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"/>
+            </svg>
+            Copy JSON
+          </button>
+          <button id="download-btn" class="h-8 px-3 rounded-vercel border border-accents-2 text-13 font-medium text-geist-400 hover:border-geist-0 hover:text-geist-0 transition-colors flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+            </svg>
+            Download
+          </button>
+          <button id="download-pdf-btn" class="h-8 px-3 rounded-vercel bg-geist-0 text-white text-13 font-medium hover:bg-geist-200 transition-colors flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+            </svg>
+            PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-6">
+      <!-- Sidebar -->
+      <aside id="report-sidebar" class="w-56 flex-shrink-0 sticky top-36 self-start hidden lg:block">
+        <nav class="space-y-1">
+          <a href="#section-overview" class="sidebar-link active">Overview</a>
+          <a href="#section-issues" class="sidebar-link">
+            Issues
+            <span id="sidebar-issues-count" class="sidebar-count">0</span>
+          </a>
+          <a href="#section-tables" class="sidebar-link">
+            Tables
+            <span id="sidebar-tables-count" class="sidebar-count">0</span>
+          </a>
+          <a href="#section-functions" class="sidebar-link">
+            Functions
+            <span id="sidebar-functions-count" class="sidebar-count">0</span>
+          </a>
+          <a href="#section-storage" class="sidebar-link">
+            Storage
+            <span id="sidebar-storage-count" class="sidebar-count">0</span>
+          </a>
+          <a href="#section-remediation" class="sidebar-link">Remediation</a>
+          <a href="#section-details" class="sidebar-link">Details</a>
+          <a href="#section-checklist" class="sidebar-link">Security Checklist</a>
+        </nav>
+        <!-- Feedback Section -->
+        <div class="mt-6 pt-6 border-t border-accents-2 space-y-2">
+          <a href="https://dodo.pe/supabaseaudit" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 text-14 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-vercel transition-colors w-full">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+            Buy me Coffee/Tea
+          </a>
+          <div class="relative" id="feedback-dropdown">
+            <button id="feedback-button" type="button" class="w-full text-left px-3 py-2 text-14 text-geist-400 hover:text-geist-0 hover:bg-accents-1 rounded-vercel transition-colors flex items-center justify-between">
+              <span>Share feedback/questions</span>
+              <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div id="feedback-menu" class="absolute bottom-full left-0 mb-2 w-48 bg-white border border-accents-2 rounded-vercel shadow-lg opacity-0 invisible transition-all duration-200 z-50">
+              <a href="https://x.com/NocodeTalks" target="_blank" rel="noopener noreferrer" class="block px-4 py-2.5 text-14 text-geist-400 hover:bg-accents-1 hover:text-geist-0 transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                Twitter
+              </a>
+              <a href="mailto:nocodetalks@gmail.com" class="block px-4 py-2.5 text-14 text-geist-400 hover:bg-accents-1 hover:text-geist-0 transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                Email
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 min-w-0 space-y-6">
+        <!-- Overview -->
+        <section id="section-overview" class="scroll-mt-36">
+          <div class="report-card">
+            <h2 class="text-lg font-medium text-geist-0 mb-6">Overview</h2>
+            <div id="summary-content" class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8"></div>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                <h3 class="text-13 font-medium text-geist-400 mb-4">Risk Score</h3>
+                <div class="flex items-center gap-6">
+                  <div class="w-24 h-24">
+                    <canvas id="risk-chart"></canvas>
+                  </div>
+                  <div id="score-content" class="flex-1"></div>
+                </div>
+              </div>
+              <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                <h3 class="text-13 font-medium text-geist-400 mb-4">Issues by Severity</h3>
+                <div class="h-24">
+                  <canvas id="issues-chart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Issues -->
+        <section id="section-issues" class="scroll-mt-36">
+          <div class="report-card">
+            <h2 class="text-lg font-medium text-geist-0 mb-6">Security Issues</h2>
+            <div id="issues-content" class="space-y-2"></div>
+          </div>
+        </section>
+
+        <!-- Tables -->
+        <section id="section-tables" class="scroll-mt-36">
+          <div class="report-card">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-lg font-medium text-geist-0">Exposed Tables & Views</h2>
+              <div class="relative">
+                <input
+                  type="text"
+                  id="table-search"
+                  placeholder="Search..."
+                  class="h-8 pl-8 pr-3 text-13 rounded-vercel border border-accents-2 bg-white focus:outline-none focus:border-geist-0 transition-colors w-40"
+                />
+                <svg class="w-3.5 h-3.5 text-geist-500 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div id="tables-content"></div>
+          </div>
+        </section>
+
+        <!-- Functions -->
+        <section id="section-functions" class="scroll-mt-36">
+          <div class="report-card">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-lg font-medium text-geist-0">Exposed RPC Functions</h2>
+              <div class="relative">
+                <input
+                  type="text"
+                  id="function-search"
+                  placeholder="Search..."
+                  class="h-8 pl-8 pr-3 text-13 rounded-vercel border border-accents-2 bg-white focus:outline-none focus:border-geist-0 transition-colors w-40"
+                />
+                <svg class="w-3.5 h-3.5 text-geist-500 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div id="functions-content"></div>
+          </div>
+        </section>
+
+        <!-- Storage -->
+        <section id="section-storage" class="scroll-mt-36">
+          <div class="report-card">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-lg font-medium text-geist-0">Exposed Storage Buckets</h2>
+              <div class="relative">
+                <input
+                  type="text"
+                  id="storage-search"
+                  placeholder="Search..."
+                  class="h-8 pl-8 pr-3 text-13 rounded-vercel border border-accents-2 bg-white focus:outline-none focus:border-geist-0 transition-colors w-40"
+                />
+                <svg class="w-3.5 h-3.5 text-geist-500 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div id="storage-content"></div>
+          </div>
+        </section>
+
+        <!-- Remediation -->
+        <section id="section-remediation" class="scroll-mt-36">
+          <div class="report-card">
+            <h2 class="text-lg font-medium text-geist-0 mb-1">Remediation Guide</h2>
+            <p class="text-13 text-geist-400 mb-6">Copy-paste SQL snippets to fix identified issues</p>
+            <div id="remediation-content" class="space-y-3"></div>
+          </div>
+        </section>
+
+        <!-- Technical Details -->
+        <section id="section-details" class="scroll-mt-36">
+          <div class="report-card">
+            <button id="details-toggle" class="w-full flex items-center justify-between text-left">
+              <h2 class="text-lg font-medium text-geist-0">Technical Details</h2>
+              <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div id="details-content" class="hidden mt-6 space-y-4">
+              <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                <h3 class="text-13 font-medium text-geist-400 mb-4">JWT Token Analysis</h3>
+                <div id="jwt-content"></div>
+              </div>
+              <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                <h3 class="text-13 font-medium text-geist-400 mb-4">Storage Buckets</h3>
+                <div id="buckets-content" class="space-y-2"></div>
+              </div>
+              <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+                <h3 class="text-13 font-medium text-geist-400 mb-4">Data Exposure Summary</h3>
+                <div id="exposure-content"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Checklist -->
+        <section id="section-checklist" class="scroll-mt-36">
+          <div class="report-card">
+            <h2 class="text-lg font-medium text-geist-0 mb-6">Security Checklist</h2>
+            <div id="checklist-content" class="space-y-2"></div>
+          </div>
+        </section>
+
+        <!-- Limitations -->
+        <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+          <h3 class="text-13 font-medium text-geist-0 mb-3">Limitations</h3>
+          <ul class="text-13 text-geist-400 space-y-1.5">
+            <li>• Edge functions require Management API and cannot be discovered with anon key</li>
+            <li>• RLS policy details may not be accessible with anon key</li>
+            <li>• Cannot detect server-side security measures or custom middleware</li>
+            <li>• Write permissions detected via OPTIONS headers may not be accurate</li>
+          </ul>
+        </div>
+
+        <!-- Safety Note -->
+        <div class="p-4 rounded-vercel border border-accents-2 bg-accents-1">
+          <div class="flex items-center gap-2 text-geist-0 text-14 font-medium mb-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            Safe & Read-Only
+          </div>
+          <p class="text-13 text-geist-400">
+            This tool uses only safe, read-only methods (GET and OPTIONS requests). It will never modify your database.
+          </p>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>

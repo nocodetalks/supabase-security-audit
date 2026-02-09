@@ -1,0 +1,17 @@
+---
+---
+
+<div id="data-modal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-geist-0/50" id="modal-backdrop"></div>
+  <div class="absolute inset-4 md:inset-10 bg-white rounded-vercel flex flex-col overflow-hidden border border-accents-2">
+    <div class="flex items-center justify-between px-4 h-14 border-b border-accents-2">
+      <h3 id="modal-title" class="font-medium text-geist-0">Table Data</h3>
+      <button id="modal-close" class="w-8 h-8 rounded-vercel hover:bg-accents-1 flex items-center justify-center transition-colors">
+        <svg class="w-4 h-4 text-geist-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div id="modal-content" class="flex-1 overflow-auto p-4"></div>
+  </div>
+</div>
