@@ -76,6 +76,44 @@ A client-side web application that analyzes Supabase project security using only
 
 Works in all modern browsers (Chrome, Firefox, Safari, Edge). Requires JavaScript enabled.
 
+## Claude Code Skills
+
+PolicyCheck includes 10 security audit skills for [Claude Code](https://claude.com/claude-code). Each skill generates **read-only SQL** you paste into the Supabase SQL Editor — nothing is executed automatically.
+
+### Install
+
+```bash
+npx skills add nocodetalks/supabase-security-audit
+```
+
+### Available Skills
+
+| Skill | Command | What it does |
+|-------|---------|-------------|
+| **Full Security Audit** | `/full-security-audit` | Comprehensive 13-check audit covering RLS, policies, storage, functions, auth, and Realtime in one script |
+| **Emergency Assessment** | `/emergency-assessment` | Breach response — assessment queries + containment plan. Use when credentials are leaked or you suspect compromise |
+| **RLS Audit** | `/audit-rls` | Finds tables missing Row Level Security |
+| **Policy Audit** | `/audit-policies` | Reviews existing RLS policies for overly permissive rules |
+| **Sensitive Columns** | `/audit-sensitive-columns` | Detects exposed passwords, tokens, API keys, and PII columns |
+| **Storage Audit** | `/audit-storage` | Audits public buckets, missing policies, and upload restrictions |
+| **RPC Functions** | `/audit-rpc-functions` | Audits anon-callable functions, SECURITY DEFINER risks, search_path issues |
+| **API Exposure** | `/audit-api-exposure` | Reviews overall API surface — table count, data volume, role grants |
+| **Auth Audit** | `/audit-auth` | Audits auth config — unconfirmed users, MFA, auth hooks, service_role usage |
+| **Realtime Audit** | `/audit-realtime` | Audits Realtime subscriptions for data leaks via tables without RLS |
+
+### How it works
+
+1. Run a skill command in Claude Code (e.g., `/audit-rls`)
+2. Claude generates read-only SQL queries for your situation
+3. Paste the SQL into your Supabase SQL Editor and run it
+4. Claude interprets the results and recommends fixes (as SQL comments you apply manually)
+
+### Start here
+
+- **Routine check**: `/full-security-audit`
+- **Suspected breach**: `/emergency-assessment`
+- **Specific concern**: Use the individual skill for that area
+
 ## License
 
 MIT

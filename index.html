@@ -79,6 +79,7 @@
             <div class="flex items-center gap-8 text-14 text-geist-400">
                 <a href="#features" class="hover:text-geist-0 transition-colors">Features</a>
                 <a href="#how-it-works" class="hover:text-geist-0 transition-colors">How it works</a>
+                <a href="https://github.com/nocodetalks/supabase-security-audit/tree/main/skills" target="_blank" rel="noopener noreferrer" class="hover:text-geist-0 transition-colors">Skills</a>
                 <a href="https://github.com/nocodetalks/supabase-security-audit" target="_blank" rel="noopener noreferrer" class="hover:text-geist-0 transition-colors">GitHub</a>
                 <div class="relative group" id="contact-dropdown">
                     <button id="contact-button" type="button" class="hover:text-geist-0 transition-colors flex items-center gap-1">
@@ -283,6 +284,67 @@
     </section>
 
     <!-- How it works Section -->
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 border-t border-accents-2">
+        <div class="max-w-[800px] mx-auto px-6">
+            <h2 class="text-3xl font-semibold text-geist-0 text-center mb-4 tracking-[-0.02em]">Claude Code Skills</h2>
+            <p class="text-geist-400 text-center mb-6">10 security audit skills for Claude Code. Read-only SQL — nothing is executed automatically.</p>
+            <div class="text-center mb-12">
+                <code class="bg-geist-100 text-geist-700 px-4 py-2 rounded-vercel text-14 font-mono">npx skills add nocodetalks/supabase-security-audit</code>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/full-security-audit</div>
+                    <div class="text-13 text-geist-400">Comprehensive 13-check audit in one script</div>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/emergency-assessment</div>
+                    <div class="text-13 text-geist-400">Breach response with containment plan</div>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/audit-rls</div>
+                    <div class="text-13 text-geist-400">Find tables missing Row Level Security</div>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/audit-policies</div>
+                    <div class="text-13 text-geist-400">Review RLS policies for permissive rules</div>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/audit-sensitive-columns</div>
+                    <div class="text-13 text-geist-400">Detect exposed passwords, tokens, PII</div>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/audit-storage</div>
+                    <div class="text-13 text-geist-400">Audit public buckets and upload policies</div>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/audit-rpc-functions</div>
+                    <div class="text-13 text-geist-400">Audit anon-callable and SECURITY DEFINER functions</div>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/audit-api-exposure</div>
+                    <div class="text-13 text-geist-400">Review API surface and role grants</div>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/audit-auth</div>
+                    <div class="text-13 text-geist-400">Audit auth config, MFA, and service_role usage</div>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-1">/audit-realtime</div>
+                    <div class="text-13 text-geist-400">Audit Realtime subscriptions for data leaks</div>
+                </div>
+            </div>
+            <div class="text-center">
+                <a href="https://github.com/nocodetalks/supabase-security-audit/tree/main/skills" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-geist-0 text-white px-6 py-2.5 rounded-vercel text-14 font-medium hover:bg-geist-200 transition-colors">
+                    View on GitHub
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <section id="how-it-works" class="py-20 border-t border-accents-2">
         <div class="max-w-[600px] mx-auto px-6">
             <h2 class="text-3xl font-semibold text-geist-0 text-center mb-4 tracking-[-0.02em]">How it works</h2>
