@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills — PolicyCheck</title>
+
+    <meta property="og:title" content="PolicyCheck Skills — Claude Code Security Audit Skills for Supabase" />
+    <meta property="og:description" content="10 security audit skills for Claude Code. Audit RLS, policies, storage, functions, auth, and more with read-only SQL." />
+    <meta property="og:url" content="/skills.html" />
+    <meta property="og:site_name" content="PolicyCheck" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content="/op_graph.jpeg" />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'geist': {
+                            '0': '#000000',
+                            '100': '#111111',
+                            '200': '#333333',
+                            '300': '#444444',
+                            '400': '#666666',
+                            '500': '#888888',
+                            '600': '#999999',
+                            '700': '#eaeaea',
+                            '800': '#fafafa',
+                            '900': '#ffffff',
+                        },
+                        'accents': {
+                            '1': '#fafafa',
+                            '2': '#eaeaea',
+                            '3': '#999999',
+                            '4': '#888888',
+                            '5': '#666666',
+                            '6': '#444444',
+                            '7': '#333333',
+                            '8': '#111111',
+                        },
+                        'error': '#e00',
+                        'success': '#0070f3',
+                        'warning': '#f5a623',
+                    },
+                    fontFamily: {
+                        'sans': ['Geist', 'system-ui', '-apple-system', 'sans-serif'],
+                        'mono': ['Geist Mono', 'Menlo', 'Monaco', 'monospace'],
+                    },
+                    fontSize: {
+                        '13': '13px',
+                        '14': '14px',
+                    },
+                    borderRadius: {
+                        'vercel': '5px',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="font-sans bg-white text-geist-0 antialiased">
+    <!-- Navigation -->
+    <nav class="border-b border-accents-2 bg-white sticky top-0 z-50">
+        <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="cursor-pointer">
+                    <img src="logo.png" alt="PolicyCheck" class="h-8 w-auto">
+                </a>
+            </div>
+            <div class="flex items-center gap-8 text-14 text-geist-400">
+                <a href="index.html#features" class="hover:text-geist-0 transition-colors">Features</a>
+                <a href="index.html#how-it-works" class="hover:text-geist-0 transition-colors">How it works</a>
+                <a href="skills.html" class="text-geist-0 transition-colors">Skills</a>
+                <a href="https://github.com/nocodetalks/supabase-security-audit" target="_blank" rel="noopener noreferrer" class="hover:text-geist-0 transition-colors">GitHub</a>
+                <div class="relative group" id="contact-dropdown">
+                    <button id="contact-button" type="button" class="hover:text-geist-0 transition-colors flex items-center gap-1">
+                        Contact
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                        </svg>
+                    </button>
+                    <div id="contact-menu" class="absolute right-0 top-full mt-2 w-48 bg-white border border-accents-2 rounded-vercel shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <a href="https://github.com/nocodetalks/supabase-security-audit" target="_blank" rel="noopener noreferrer" class="block px-4 py-2.5 text-14 text-geist-400 hover:bg-accents-1 hover:text-geist-0 transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            GitHub
+                        </a>
+                        <a href="https://x.com/NocodeTalks" target="_blank" rel="noopener noreferrer" class="block px-4 py-2.5 text-14 text-geist-400 hover:bg-accents-1 hover:text-geist-0 transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                            Twitter
+                        </a>
+                        <a href="mailto:nocodetalks@gmail.com" class="block px-4 py-2.5 text-14 text-geist-400 hover:bg-accents-1 hover:text-geist-0 transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                            </svg>
+                            Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="py-20 md:py-28">
+        <div class="max-w-[800px] mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-5xl font-semibold tracking-[-0.04em] text-geist-0 mb-4">Claude Code Skills</h1>
+            <p class="text-lg text-geist-400 mb-8 max-w-[560px] mx-auto">10 security audit skills for Claude Code. Generate read-only SQL queries to audit your Supabase project — nothing is executed automatically.</p>
+            <div class="inline-flex items-center gap-3 bg-geist-100 rounded-vercel px-5 py-3 mb-6">
+                <code class="text-geist-700 text-14 font-mono">npx skills add nocodetalks/supabase-security-audit</code>
+                <button onclick="navigator.clipboard.writeText('npx skills add nocodetalks/supabase-security-audit').then(()=>{this.innerHTML='<svg class=\'w-4 h-4 text-green-500\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\' stroke-width=\'1.5\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M4.5 12.75l6 6 9-13.5\'/></svg>';setTimeout(()=>{this.innerHTML='<svg class=\'w-4 h-4 text-geist-500\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\' stroke-width=\'1.5\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184\'/></svg>'}, 2000)})" class="p-1 hover:bg-geist-200 rounded transition-colors cursor-pointer">
+                    <svg class="w-4 h-4 text-geist-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="border-t border-accents-2 py-16">
+        <div class="max-w-[800px] mx-auto px-6">
+            <h2 class="text-2xl font-semibold text-geist-0 text-center mb-10 tracking-[-0.02em]">How it works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-10 h-10 rounded-full border border-accents-2 text-geist-400 flex items-center justify-center mx-auto mb-3 text-14 font-medium">1</div>
+                    <h3 class="font-medium text-geist-0 mb-1 text-14">Run a skill</h3>
+                    <p class="text-13 text-geist-400">Type a command like <code class="bg-accents-1 px-1.5 py-0.5 rounded text-geist-0">/audit-rls</code> in Claude Code</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-10 h-10 rounded-full border border-accents-2 text-geist-400 flex items-center justify-center mx-auto mb-3 text-14 font-medium">2</div>
+                    <h3 class="font-medium text-geist-0 mb-1 text-14">Get SQL queries</h3>
+                    <p class="text-13 text-geist-400">Claude generates read-only SQL tailored to your situation</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-10 h-10 rounded-full border border-accents-2 text-geist-400 flex items-center justify-center mx-auto mb-3 text-14 font-medium">3</div>
+                    <h3 class="font-medium text-geist-0 mb-1 text-14">Review & fix</h3>
+                    <p class="text-13 text-geist-400">Paste in your SQL Editor, get results interpreted, and apply recommended fixes manually</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Start Here -->
+    <section class="border-t border-accents-2 py-16">
+        <div class="max-w-[800px] mx-auto px-6">
+            <h2 class="text-2xl font-semibold text-geist-0 text-center mb-10 tracking-[-0.02em]">Where to start</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="#full-security-audit" class="border border-accents-2 rounded-vercel p-5 hover:border-geist-400 transition-colors block">
+                    <div class="text-13 text-geist-500 mb-1">Routine check</div>
+                    <div class="font-medium text-geist-0">/full-security-audit</div>
+                    <div class="text-13 text-geist-400 mt-2">Covers all 13 checks in one script</div>
+                </a>
+                <a href="#emergency-assessment" class="border border-error/30 rounded-vercel p-5 hover:border-error transition-colors block">
+                    <div class="text-13 text-error mb-1">Suspected breach</div>
+                    <div class="font-medium text-geist-0">/emergency-assessment</div>
+                    <div class="text-13 text-geist-400 mt-2">Assessment + containment plan</div>
+                </a>
+                <a href="#individual-skills" class="border border-accents-2 rounded-vercel p-5 hover:border-geist-400 transition-colors block">
+                    <div class="text-13 text-success mb-1">Specific concern</div>
+                    <div class="font-medium text-geist-0">Individual skills</div>
+                    <div class="text-13 text-geist-400 mt-2">Deep-dive into a single area</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full Security Audit -->
+    <section id="full-security-audit" class="border-t border-accents-2 py-16">
+        <div class="max-w-[800px] mx-auto px-6">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="bg-geist-0 text-white text-13 px-2.5 py-0.5 rounded-vercel font-medium">Recommended</span>
+                <code class="text-14 font-mono text-geist-400">/full-security-audit</code>
+            </div>
+            <h2 class="text-2xl font-semibold text-geist-0 mb-3 tracking-[-0.02em]">Full Security Audit</h2>
+            <p class="text-geist-400 mb-6">Comprehensive audit covering RLS, policies, sensitive columns, storage, functions, API exposure, auth, and Realtime in a single script. Start here for a complete picture.</p>
+
+            <div class="border border-accents-2 rounded-vercel overflow-hidden">
+                <div class="bg-accents-1 px-4 py-3 text-13 font-medium text-geist-400 border-b border-accents-2">13 checks in one script</div>
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2 md:border-r">1. Tables without RLS</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2">2. RLS enabled but no policies</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2 md:border-r">3. Permissive write policies</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2">4. Sensitive column exposure</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2 md:border-r">5. Anon role permissions</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2">6. Anon-callable functions</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2 md:border-r">7. SECURITY DEFINER risks</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2">8. Storage bucket security</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2 md:border-r">9. Storage policies</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2">10. Realtime security</div>
+                    <div class="px-4 py-3 text-14 text-geist-0 border-b border-accents-2 md:border-b-0 md:border-r">11. Data volume analysis</div>
+                    <div class="px-4 py-3 text-14 text-geist-0">12. Auth status</div>
+                </div>
+                <div class="bg-accents-1 px-4 py-3 text-13 text-geist-400 border-t border-accents-2">+ Summary scorecard</div>
+            </div>
+
+            <div class="mt-4 text-13 text-geist-400">
+                <span class="text-geist-0 font-medium">Trigger phrases:</span> "full security audit", "check everything", "security posture", "complete Supabase audit"
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Assessment -->
+    <section id="emergency-assessment" class="border-t border-accents-2 py-16">
+        <div class="max-w-[800px] mx-auto px-6">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="bg-error text-white text-13 px-2.5 py-0.5 rounded-vercel font-medium">Emergency</span>
+                <code class="text-14 font-mono text-geist-400">/emergency-assessment</code>
+            </div>
+            <h2 class="text-2xl font-semibold text-geist-0 mb-3 tracking-[-0.02em]">Emergency Assessment</h2>
+            <p class="text-geist-400 mb-6">For suspected breaches or leaked credentials. Provides read-only assessment queries and a structured response plan. Does not execute any changes.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-2">Phase 1: Assess</div>
+                    <ul class="text-13 text-geist-400 space-y-1">
+                        <li>Recent auth activity</li>
+                        <li>Suspicious signups</li>
+                        <li>Elevated roles</li>
+                        <li>Unprotected tables</li>
+                        <li>Public buckets</li>
+                    </ul>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-2">Phase 2: Contain</div>
+                    <ul class="text-13 text-geist-400 space-y-1">
+                        <li>Regenerate anon key</li>
+                        <li>Regenerate service_role key</li>
+                        <li>New JWT secret</li>
+                        <li>Reset DB password</li>
+                    </ul>
+                </div>
+                <div class="border border-accents-2 rounded-vercel p-4">
+                    <div class="text-14 font-medium text-geist-0 mb-2">Phase 3: Recover</div>
+                    <ul class="text-13 text-geist-400 space-y-1">
+                        <li>Update env variables</li>
+                        <li>Redeploy application</li>
+                        <li>Restore access selectively</li>
+                        <li>Ban suspicious accounts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-13 text-geist-400">
+                <span class="text-geist-0 font-medium">Trigger phrases:</span> "I think I've been hacked", "breach assessment", "credentials leaked", "emergency security check"
+            </div>
+        </div>
+    </section>
+
+    <!-- Individual Skills -->
+    <section id="individual-skills" class="border-t border-accents-2 py-16">
+        <div class="max-w-[800px] mx-auto px-6">
+            <h2 class="text-2xl font-semibold text-geist-0 text-center mb-3 tracking-[-0.02em]">Individual Skills</h2>
+            <p class="text-geist-400 text-center mb-10">Deep-dive into a specific security area</p>
+
+            <div class="space-y-4">
+                <!-- audit-rls -->
+                <div class="border border-accents-2 rounded-vercel overflow-hidden">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')" class="w-full px-5 py-4 flex items-center justify-between hover:bg-accents-1 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <code class="text-14 font-mono text-geist-0">/audit-rls</code>
+                            <span class="text-13 text-geist-400 hidden md:inline">Row Level Security</span>
+                        </div>
+                        <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="hidden border-t border-accents-2 px-5 py-4 bg-accents-1">
+                        <p class="text-14 text-geist-400 mb-3">Finds tables missing Row Level Security. Every table without RLS is fully accessible to anyone with your anon key.</p>
+                        <div class="text-13 text-geist-400 space-y-1">
+                            <div><span class="text-geist-0 font-medium">Checks:</span> Tables with RLS disabled, tables with RLS but no policies (blocks all access), full RLS status overview</div>
+                            <div><span class="text-geist-0 font-medium">Trigger phrases:</span> "check RLS", "are my tables secure", "find unprotected tables"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- audit-policies -->
+                <div class="border border-accents-2 rounded-vercel overflow-hidden">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')" class="w-full px-5 py-4 flex items-center justify-between hover:bg-accents-1 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <code class="text-14 font-mono text-geist-0">/audit-policies</code>
+                            <span class="text-13 text-geist-400 hidden md:inline">RLS Policies</span>
+                        </div>
+                        <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="hidden border-t border-accents-2 px-5 py-4 bg-accents-1">
+                        <p class="text-14 text-geist-400 mb-3">Reviews existing RLS policies for gaps and misconfigurations. Catches <code class="bg-white px-1 py-0.5 rounded border border-accents-2">USING (true)</code> on write operations and other dangerous patterns.</p>
+                        <div class="text-13 text-geist-400 space-y-1">
+                            <div><span class="text-geist-0 font-medium">Checks:</span> Permissive write policies, dangerous WITH CHECK clauses, tables with RLS but no policies, policy command analysis</div>
+                            <div><span class="text-geist-0 font-medium">Trigger phrases:</span> "review my policies", "check RLS policies", "find permissive policies", "why can anon write to my table"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- audit-sensitive-columns -->
+                <div class="border border-accents-2 rounded-vercel overflow-hidden">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')" class="w-full px-5 py-4 flex items-center justify-between hover:bg-accents-1 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <code class="text-14 font-mono text-geist-0">/audit-sensitive-columns</code>
+                            <span class="text-13 text-geist-400 hidden md:inline">PII & Secrets</span>
+                        </div>
+                        <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="hidden border-t border-accents-2 px-5 py-4 bg-accents-1">
+                        <p class="text-14 text-geist-400 mb-3">Finds exposed sensitive columns like passwords, tokens, API keys, SSNs, and credit card numbers in tables accessible via the REST API.</p>
+                        <div class="text-13 text-geist-400 space-y-1">
+                            <div><span class="text-geist-0 font-medium">Checks:</span> Password/secret/token columns, API key columns, PII (SSN, financial), crypto material (salts, hashes), anon access to sensitive data</div>
+                            <div><span class="text-geist-0 font-medium">Trigger phrases:</span> "check for PII", "sensitive data exposed", "are passwords visible", "audit column security"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- audit-storage -->
+                <div class="border border-accents-2 rounded-vercel overflow-hidden">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')" class="w-full px-5 py-4 flex items-center justify-between hover:bg-accents-1 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <code class="text-14 font-mono text-geist-0">/audit-storage</code>
+                            <span class="text-13 text-geist-400 hidden md:inline">Storage Buckets</span>
+                        </div>
+                        <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="hidden border-t border-accents-2 px-5 py-4 bg-accents-1">
+                        <p class="text-14 text-geist-400 mb-3">Audits storage buckets for public access, missing policies, and upload restrictions. Public buckets expose all files to the internet.</p>
+                        <div class="text-13 text-geist-400 space-y-1">
+                            <div><span class="text-geist-0 font-medium">Checks:</span> Public flag status, file size limits, MIME type restrictions, buckets with no storage policies</div>
+                            <div><span class="text-geist-0 font-medium">Trigger phrases:</span> "check storage security", "are my buckets public", "audit file uploads", "storage bucket exposed"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- audit-rpc-functions -->
+                <div class="border border-accents-2 rounded-vercel overflow-hidden">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')" class="w-full px-5 py-4 flex items-center justify-between hover:bg-accents-1 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <code class="text-14 font-mono text-geist-0">/audit-rpc-functions</code>
+                            <span class="text-13 text-geist-400 hidden md:inline">RPC & Functions</span>
+                        </div>
+                        <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="hidden border-t border-accents-2 px-5 py-4 bg-accents-1">
+                        <p class="text-14 text-geist-400 mb-3">Audits RPC functions for anon access, SECURITY DEFINER issues, and missing search_path configuration — a critical privilege escalation vector.</p>
+                        <div class="text-13 text-geist-400 space-y-1">
+                            <div><span class="text-geist-0 font-medium">Checks:</span> Anon-callable functions, SECURITY DEFINER without search_path, destructive functions (delete/drop/truncate) callable by anon</div>
+                            <div><span class="text-geist-0 font-medium">Trigger phrases:</span> "check my functions", "which functions can anon call", "audit RPC security", "SECURITY DEFINER risk"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- audit-api-exposure -->
+                <div class="border border-accents-2 rounded-vercel overflow-hidden">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')" class="w-full px-5 py-4 flex items-center justify-between hover:bg-accents-1 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <code class="text-14 font-mono text-geist-0">/audit-api-exposure</code>
+                            <span class="text-13 text-geist-400 hidden md:inline">API Surface</span>
+                        </div>
+                        <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="hidden border-t border-accents-2 px-5 py-4 bg-accents-1">
+                        <p class="text-14 text-geist-400 mb-3">Reviews the overall API attack surface — how many tables are exposed, how much data is accessible, and what permissions the anon role has.</p>
+                        <div class="text-13 text-geist-400 space-y-1">
+                            <div><span class="text-geist-0 font-medium">Checks:</span> Exposed table count, anon role grants (SELECT/INSERT/UPDATE/DELETE), tables with 10k+ rows, overall attack surface summary</div>
+                            <div><span class="text-geist-0 font-medium">Trigger phrases:</span> "how much is exposed", "audit API surface", "what can anon access", "too many tables visible"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- audit-auth -->
+                <div class="border border-accents-2 rounded-vercel overflow-hidden">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')" class="w-full px-5 py-4 flex items-center justify-between hover:bg-accents-1 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <code class="text-14 font-mono text-geist-0">/audit-auth</code>
+                            <span class="text-13 text-geist-400 hidden md:inline">Authentication</span>
+                        </div>
+                        <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="hidden border-t border-accents-2 px-5 py-4 bg-accents-1">
+                        <p class="text-14 text-geist-400 mb-3">Audits authentication configuration including unconfirmed accounts, MFA adoption rate, auth hook security, and service_role usage in policies.</p>
+                        <div class="text-13 text-geist-400 space-y-1">
+                            <div><span class="text-geist-0 font-medium">Checks:</span> Unconfirmed user count, MFA adoption, auth hook functions callable by anon, service_role references in policies</div>
+                            <div><span class="text-geist-0 font-medium">Trigger phrases:</span> "check auth security", "MFA adoption", "unconfirmed users", "audit authentication"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- audit-realtime -->
+                <div class="border border-accents-2 rounded-vercel overflow-hidden">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')" class="w-full px-5 py-4 flex items-center justify-between hover:bg-accents-1 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <code class="text-14 font-mono text-geist-0">/audit-realtime</code>
+                            <span class="text-13 text-geist-400 hidden md:inline">Realtime Subscriptions</span>
+                        </div>
+                        <svg class="w-4 h-4 text-geist-400 chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="hidden border-t border-accents-2 px-5 py-4 bg-accents-1">
+                        <p class="text-14 text-geist-400 mb-3">Audits Realtime subscriptions for data leaks. Tables broadcasting changes without RLS let anyone subscribe and watch all data flow in real time.</p>
+                        <div class="text-13 text-geist-400 space-y-1">
+                            <div><span class="text-geist-0 font-medium">Checks:</span> Tables in Realtime without RLS, missing SELECT policies on Realtime tables, sensitive columns in Realtime tables</div>
+                            <div><span class="text-geist-0 font-medium">Trigger phrases:</span> "check Realtime security", "who can see my Realtime data", "audit subscriptions", "Realtime leaking data"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Source -->
+    <section class="border-t border-accents-2 py-16">
+        <div class="max-w-[800px] mx-auto px-6 text-center">
+            <h2 class="text-2xl font-semibold text-geist-0 mb-3 tracking-[-0.02em]">Open Source</h2>
+            <p class="text-geist-400 mb-6">All skills are open source. Browse the source, contribute, or fork for your own project.</p>
+            <a href="https://github.com/nocodetalks/supabase-security-audit/tree/main/skills" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-geist-0 text-white px-6 py-2.5 rounded-vercel text-14 font-medium hover:bg-geist-200 transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                View on GitHub
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-accents-2 py-8">
+        <div class="max-w-[1200px] mx-auto px-6 text-center">
+            <p class="text-13 text-geist-400">Built for the Supabase community.</p>
+            <p class="text-13 text-geist-400 mt-1">
+                <a href="https://github.com/nocodetalks/supabase-security-audit" target="_blank" rel="noopener noreferrer" class="text-geist-0 hover:underline">GitHub</a>
+                · Questions? <a href="mailto:nocodetalks@gmail.com" class="text-geist-0 hover:underline">nocodetalks@gmail.com</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
